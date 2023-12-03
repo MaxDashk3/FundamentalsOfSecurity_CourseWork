@@ -4,6 +4,7 @@ using EnglishWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnglishWebApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231203160217_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,20 +33,11 @@ namespace EnglishWebApp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ThemeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ThemeId");
 
                     b.ToTable("FillTheGapTasks");
                 });
@@ -89,9 +83,6 @@ namespace EnglishWebApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ThemeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Transcript")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -102,24 +93,7 @@ namespace EnglishWebApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ThemeId");
-
                     b.ToTable("Words");
-                });
-
-            modelBuilder.Entity("FillTheGapTaskWord", b =>
-                {
-                    b.Property<int>("FillTasksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WordsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FillTasksId", "WordsId");
-
-                    b.HasIndex("WordsId");
-
-                    b.ToTable("FillTheGapTaskWord");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -324,39 +298,6 @@ namespace EnglishWebApp.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EnglishWebApp.Models.FillTheGapTask", b =>
-                {
-                    b.HasOne("EnglishWebApp.Models.Theme", "Theme")
-                        .WithMany("FillTasks")
-                        .HasForeignKey("ThemeId");
-
-                    b.Navigation("Theme");
-                });
-
-            modelBuilder.Entity("EnglishWebApp.Models.Word", b =>
-                {
-                    b.HasOne("EnglishWebApp.Models.Theme", "Theme")
-                        .WithMany("Words")
-                        .HasForeignKey("ThemeId");
-
-                    b.Navigation("Theme");
-                });
-
-            modelBuilder.Entity("FillTheGapTaskWord", b =>
-                {
-                    b.HasOne("EnglishWebApp.Models.FillTheGapTask", null)
-                        .WithMany()
-                        .HasForeignKey("FillTasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EnglishWebApp.Models.Word", null)
-                        .WithMany()
-                        .HasForeignKey("WordsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -406,13 +347,6 @@ namespace EnglishWebApp.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EnglishWebApp.Models.Theme", b =>
-                {
-                    b.Navigation("FillTasks");
-
-                    b.Navigation("Words");
                 });
 #pragma warning restore 612, 618
         }
