@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Movies.ViewModels.TicketViewModel>
+
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<h1>Tickets</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Movie
+            </th>
+            <th>
+                Date and time
+            </th>
+            <th>
+                Row and seat
+            </th>
+            <th>
+                Hall
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Bought by
+            </th>
+            <th>
+                Time of purchase
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a href="/Movies/Details/@item.MovieId">@item.Movie</a> 
+            </td>
+            <td>
+                @item.SessionTime
+            </td>
+            <td>
+                @item.Seat
+            </td>
+            <td>
+                @item.Hall
+            </td>
+            <td>
+                @item.Price
+            </td>
+            @if(item.PurchaseId!= null)
+            {
+                <td>
+                    @item.BoughtBy
+                </td>
+                <td>
+                    @item.DateOfPurchase
+                </td>
+            }
+            else
+            {
+                <td>-</td>
+                <td>-</td>
+            }
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

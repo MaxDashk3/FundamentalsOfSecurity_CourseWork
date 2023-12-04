@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Movies.ViewModels.PurchaseViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Purchases</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Person)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                <details>
+                    <summary>Tickets</summary>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Movie
+                                </th>
+                                <th>
+                                    Date and time
+                                </th>
+                                <th>
+                                    Row and Seat
+                                </th>
+                                <th>
+                                    Hall
+                                </th>
+                                <th>
+                                    Price
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in item.Tickets)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="/Movies/Details/@t.MovieId">@t.Movie</a>
+                                    </td>
+                                    <td>
+                                        @t.SessionTime
+                                    </td>
+                                    <td>
+                                        @t.Seat
+                                    </td>
+                                    <td>
+                                        @t.Hall
+                                    </td>
+                                    <td>
+                                        @t.Price
+                                    </td>
+                                    <td>
+                                        <a asp-action="Delete" asp-route-id="@t.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </details>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PurchaseId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PurchaseId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PurchaseId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

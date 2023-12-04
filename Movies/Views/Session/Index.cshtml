@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Movies.ViewModels.MovieViewModel>
+
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<h1>Sessions</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+@foreach (var movie in Model)
+{
+    <h3><a href="/movies/Details/@movie.Id">@movie.Title</a></h3>
+    <details>
+        <summary></summary>
+        <br />
+        <div>
+            <h4>Availible sessions:</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Time and Date
+                        </th>
+                        <th>
+                            Hall
+                        </th>
+                        <th>
+                            Price
+                        </th>
+
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in movie.Sessions)
+                    {
+                        <tr class="@(item.TimeDate < DateTime.Now? "unav_session" : "" )">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TimeDate)
+                            </td>
+                            <td>
+                                @item.Hall
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                            <td>
+                                <a href="@(item.TimeDate < DateTime.Now ? "" : $"Tickets/Create/{item.Id}")">
+                                    <button @(item.TimeDate < DateTime.Now ? "disabled" : "")>Pick a seat</button>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br />
+    </details>
+    <br />
+}
