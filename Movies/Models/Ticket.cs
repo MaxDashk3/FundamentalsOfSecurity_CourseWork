@@ -19,8 +19,8 @@ namespace Movies.Models
             Id = model.Id;
             PurchaseId = model.PurchaseId;
             SessionId = model.SessionId;
-            SeatRow = Convert.ToInt16(model.Seat.Remove(model.Seat.IndexOf(" ")));
-            SeatNum = Convert.ToInt16(model.Seat.Remove(0, model.Seat.IndexOf(" ")));
+            SeatRow = model.SeatNum;
+            SeatNum = model.SeatRow;
         }
     }
 }

@@ -21,6 +21,10 @@ namespace Movies.ViewModels
         [Range(1900, 2024, ErrorMessage = "The value has to be between 1900 and 2024")]
         public int Year { get; set; }
 
+        public string Description { get; set; }
+        public string TrailerLink { get; set; }
+        public string PathToImg { get; set; }
+
         public List<SessionViewModel>? Sessions { get; set; }
 
         public MovieViewModel(Movie movie)
@@ -30,6 +34,9 @@ namespace Movies.ViewModels
             Country = movie.Country;
             Year = movie.Year;
             GenreId = movie.GenreId;
+            Description = movie.Description;
+            TrailerLink = movie.TrailerLink;
+            PathToImg = movie.PathToImg;
 
             if (movie.Sessions != null)
             {
@@ -40,6 +47,8 @@ namespace Movies.ViewModels
             {
                 Genre = movie.Genre.Name;
             }
+
+
         }
     }
 }
