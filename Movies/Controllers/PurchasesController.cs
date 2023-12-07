@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,12 @@ namespace Movies.Controllers
     public class PurchasesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _manager;
 
-        public PurchasesController(ApplicationDbContext context)
+        public PurchasesController(ApplicationDbContext context, UserManager<AppUser> manager)
         {
             _context = context;
+            _manager = manager;
         }
 
         // GET: Purchases
@@ -28,6 +32,7 @@ namespace Movies.Controllers
                 .Include("Tickets.Session")
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
+                .Include("Tickets.User")
                 .Select(p => new PurchaseViewModel(p))
                 .ToList();
 
@@ -46,6 +51,7 @@ namespace Movies.Controllers
                 .Include(p => p.Tickets)
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
+                .Include("Tickets.User")
                 .FirstOrDefaultAsync(m => m.PurchaseId == id);
             if (purchase == null)
             {
@@ -56,12 +62,15 @@ namespace Movies.Controllers
         }
 
         // GET: Purchases/Create
+        [Authorize]
         public IActionResult Create()
         {
+            ViewBag.UserId = _manager.GetUserId(User);
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Create(PurchaseViewModel model)
         {
             var purchase = new Purchase(model);
@@ -81,7 +90,7 @@ namespace Movies.Controllers
                     _context.Update(t);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("BuyResult", new {Person = purchase.Person});
+                return RedirectToAction("BuyResult", new {Person = User.Identity.Name});
             }
             return View();
         }
@@ -108,6 +117,7 @@ namespace Movies.Controllers
             {
                 return NotFound();
             }
+            ViewBag.UserId = _manager.GetUserId(User);
             return View(new PurchaseViewModel(purchase));
         }
 

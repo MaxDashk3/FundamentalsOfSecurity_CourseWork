@@ -10,10 +10,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Person)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
+                @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
@@ -26,10 +23,7 @@
         @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Person)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -37,53 +31,9 @@
             <td>
                 <details>
                     <summary>Tickets</summary>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Movie
-                                </th>
-                                <th>
-                                    Date and time
-                                </th>
-                                <th>
-                                    Row and Seat
-                                </th>
-                                <th>
-                                    Hall
-                                </th>
-                                <th>
-                                    Price
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var t in item.Tickets)
-                            {
-                                <tr>
-                                    <td>
-                                        <a href="/Movies/Details/@t.MovieId">@t.Movie</a>
-                                    </td>
-                                    <td>
-                                        @t.SessionTime
-                                    </td>
-                                    <td>
-                                        @t.Seat
-                                    </td>
-                                    <td>
-                                        @t.Hall
-                                    </td>
-                                    <td>
-                                        @t.Price
-                                    </td>
-                                    <td>
-                                        <a asp-action="Delete" asp-route-id="@t.Id">Delete</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                        @{
+                            await Html.RenderPartialAsync("PurchasedTickets", item);
+                        }
                 </details>
             </td>
             <td>

@@ -4,7 +4,7 @@ using Movies.Models;
 
 namespace Movies.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -20,6 +20,16 @@ namespace Movies.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Ticket>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.Tickets)
+                .HasForeignKey(t => t.UserId);
+
+            builder.Entity<Purchase>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Purchases)
+                .HasForeignKey(p => p.UserId);
 
             builder.Entity<Ticket>()
                 .HasOne(t => t.Session)

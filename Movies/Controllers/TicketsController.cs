@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +16,16 @@ namespace Movies.Controllers
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _manager;
 
-        public TicketsController(ApplicationDbContext context)
+        public TicketsController(ApplicationDbContext context, UserManager<AppUser> manager)
         {
             _context = context;
+            _manager = manager;
         }
 
         // GET: Tickets
+        [Authorize]
         public IActionResult Create(int id)
         {
             var session = _context.Sessions
@@ -40,13 +45,17 @@ namespace Movies.Controllers
                 ViewBag.Hall = session.Hall;
                 ViewBag.SessionId = session.Id;
                 ViewBag.TakenSeats = takenseats;
+                ViewBag.UserId = _manager.GetUserId(User);
                 return View();
             }
             return RedirectToAction("Index");
         }
         [HttpPost]
+        [Authorize]
         public IActionResult Create(TicketViewModel model)
         {
+            model.SeatRow = Convert.ToInt16(model.Seat.Remove(model.Seat.IndexOf(' ')));
+            model.SeatNum = Convert.ToInt16(model.Seat.Remove(0 , model.Seat.IndexOf(' ')));
             var ticket = new Ticket(model);
 
             _context.Tickets.Add(ticket);
@@ -128,15 +137,20 @@ namespace Movies.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
         public IActionResult Cart()
         {
-            var tickets = _context.Tickets
-                .Include(t => t.Session)
-                .Include(t => t.Session.Movie)
-                .Include(t => t.Session.Hall)
+            var tickets = _context.Users
+                .Include(u => u.Tickets)
+                .Include("Tickets.Session")
+                .Include("Tickets.Session.Movie")
+                .Include("Tickets.Session.Hall")
+                .FirstOrDefault(u => u.UserName == User.Identity.Name)
+                .Tickets
                 .Where(t => t.PurchaseId == null)
                 .Select(t => new TicketViewModel(t))
                 .ToList();
+
             return View(tickets);
         }
 

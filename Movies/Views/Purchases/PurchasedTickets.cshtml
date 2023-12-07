@@ -1,0 +1,55 @@
+﻿@model Movies.ViewModels.PurchaseViewModel
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Movie
+            </th>
+            <th>
+                Date and time
+            </th>
+            <th>
+                Row
+            </th>
+            <th>
+                Seat
+            </th>
+            <th>
+                Hall
+            </th>
+            <th>
+                Price
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model.Tickets)
+        {
+            <tr>
+                <td>
+                    <a href="/Movies/Details/@t.MovieId">@t.Movie</a>
+                </td>
+                <td>
+                    @t.SessionTime
+                </td>
+                <td>
+                    @t.SeatRow
+                </td>
+                <td>
+                    @t.SeatNum
+                </td>
+                <td>
+                    @t.Hall
+                </td>
+                <td>
+                    @t.Price
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@t.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

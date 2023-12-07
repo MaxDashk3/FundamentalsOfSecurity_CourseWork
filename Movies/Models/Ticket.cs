@@ -10,7 +10,10 @@ namespace Movies.Models
         public int SessionId { get; set; }
         public int SeatRow { get; set; }
         public int SeatNum { get; set; }
+        public string UserId { get; set; }
 
+
+        public AppUser User { get; set; }
         public Purchase? Purchase { get; set; }
         public Session Session { get; set; }
 
@@ -19,8 +22,9 @@ namespace Movies.Models
             Id = model.Id;
             PurchaseId = model.PurchaseId;
             SessionId = model.SessionId;
-            SeatRow = model.SeatNum;
-            SeatNum = model.SeatRow;
+            SeatRow = model.SeatRow;
+            SeatNum = model.SeatNum;
+            UserId = model.UserId;
         }
     }
 }

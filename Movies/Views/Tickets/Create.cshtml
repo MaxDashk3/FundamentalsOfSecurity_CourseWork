@@ -16,6 +16,9 @@
         <form action="/Tickets/Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <input name="UserId" value="@ViewBag.UserId" hidden />
+            </div>
+            <div class="form-group">
                 <input name="SessionId" value="@ViewBag.SessionId" hidden />
             </div>
             <table class="col-12">

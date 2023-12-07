@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label asp-for="GenreId" class="control-label"></label>
                 <select asp-for="GenreId" class ="form-control">
-                    @foreach (Genre genre in ViewBag.Genres)
+                    @foreach (var genre in ViewBag.Genres)
                     {
                         <option value="@genre.Id">@genre.Name</option>
                     }
@@ -42,14 +42,14 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TrailerLink" class="control-label"></label>
-                <input asp-for="TrailerLink" class="form-control" />
-                <span asp-validation-for="TrailerLink" class="text-danger"></span>
+                <label asp-for="PhotoPath" class="control-label"></label>
+                <input asp-for="PhotoPath" class="form-control" />
+                <span asp-validation-for="PhotoPath" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PathToImg" class="control-label"></label>
-                <input asp-for="PathToImg" class="form-control" />
-                <span asp-validation-for="PathToImg" class="text-danger"></span>
+                <label asp-for="VideoPath" class="control-label"></label>
+                <input asp-for="VideoPath" class="form-control" />
+                <span asp-validation-for="VideoPath" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
