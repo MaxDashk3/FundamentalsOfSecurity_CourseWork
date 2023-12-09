@@ -1,10 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movies.Data;
-using Movies.Models;
 
 namespace Movies.Controllers
 {
@@ -16,16 +12,15 @@ namespace Movies.Controllers
         {
             _context = context;
         }
-
-        public bool CheckGenres(string Name)
+        public ActionResult GenresValidation(string Name)
         {
-            var DoesGenreExist = _context.Genres.Where(g => g.Name == Name).Any();
-            return !DoesGenreExist;
+            var valid = !_context.Genres.Any(g => g.Name == Name);
+            return Json(valid);
         }
-        public bool CheckMovies(string Title)
+        public ActionResult FilmsValidation(string Title)
         {
-            var DoesGenreExist = _context.Movies.Where(m => m.Title == Title).Any();
-            return !DoesGenreExist;
+            bool valid = !_context.Movies.Any(m => m.Title == Title);
+            return Json(valid);
         }
     }
 }
