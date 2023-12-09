@@ -15,17 +15,21 @@ namespace Movies.Controllers
         {
             _db = db;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int? MovieId = null)
         {
-            var movies = _db.Movies
-                .Include
-                (m => m.Sessions
-                .OrderBy(s => s.TimeDate))
-                .ThenInclude(s => s.Hall)
-                .Select(m => new MovieViewModel(m))
-                .ToList();
-            
-            return View(movies);
+            if (MovieId != null)
+            {
+                var applicationDbContext = _db.Sessions.
+                 Where(x => x.MovieId == MovieId).Include(m => m.Movie).Include(h => h.Hall)
+                .Select(m => new SessionViewModel(m)).ToListAsync();
+                return View(await applicationDbContext);
+            }
+            else
+            {
+                var applicationDbContext = _db.Sessions.Include(m => m.Movie).Include(h => h.Hall)
+                    .Select(m => new SessionViewModel(m)).ToListAsync();
+                return View(await applicationDbContext);
+            }
         }
         public IActionResult Create()
         {

@@ -21,13 +21,20 @@ namespace Movies.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index(int? GenreId = null)
+        public async Task<IActionResult> Index(int? GenreId = null, int? MovieId = null)
         {
-            if(GenreId != null)
+            if (GenreId != null)
             {
                 var applicationDbContext = _context.Movies.
                  Where(x => x.GenreId == GenreId).Include(m => m.Genre)
                 .Select(m => new MovieViewModel(m)).ToListAsync();
+                return View(await applicationDbContext);
+            }
+            else if (MovieId != null)
+            {
+                var applicationDbContext = _context.Movies
+                    .Where(x => x.Id == MovieId).Include(m => m.Genre)
+                    .Select(m => new MovieViewModel(m)).ToListAsync();
                 return View(await applicationDbContext);
             }
             else
@@ -165,14 +172,19 @@ namespace Movies.Controllers
             {
                 _context.Movies.Remove(movie);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool MovieExists(int id)
         {
-          return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        public ActionResult Validation(string Title)
+        {
+            bool valid = !_context.Movies.Any(m => m.Title == Title);
+            return Json(valid);
         }
     }
 }
