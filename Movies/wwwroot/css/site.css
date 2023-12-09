@@ -107,3 +107,55 @@ td {
     border: none;
     padding: 0px;
 }
+
+
+
+/* ���� ��� ��������� ��������� */
+@keyframes moveHeader {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+
+}
+
+.moving-header {
+    animation: moveHeader 2s infinite;
+    /* �������� ���� ������� 2 ������� �� ������������� ���������� */
+}
+
+
+
+/* ���� ��� ������� ������� ����� */
+@keyframes moveBottomAdvertisement {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.bottom-advertisement {
+    overflow: hidden;
+    position: relative;
+}
+
+.bottom-advertisement img {
+    width: 100%;
+    height: auto;
+    animation: moveBottomAdvertisement 5s linear infinite;
+    /* �������� ���� ������� 5 ������ �� ������������� ���������� */
+}
+
+
+
+blue;
