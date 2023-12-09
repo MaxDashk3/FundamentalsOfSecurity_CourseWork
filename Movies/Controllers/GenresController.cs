@@ -23,9 +23,14 @@ namespace Movies.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-              return _context.Genres != null ? 
-                          View(await _context.Genres.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Genres'  is null.");
+            if (_context.Genres != null)
+            {
+                return View(await _context.Genres.ToListAsync());
+            }
+            else
+            {
+                return Problem("Entity set 'ApplicationDbContext.Genres'  is null.");
+            }
         }
 
         // GET: Genres/Details/5

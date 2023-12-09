@@ -64,3 +64,93 @@ td{
     margin-top: 20px;
     text-align: center;
 }
+.main-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+    .main-list li {
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+        position: relative;
+    }
+
+.sub-list {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    cursor: pointer;
+    list-style-type: none;
+    top: 100%;
+    z-index: 1;
+    padding-left: 0;
+}
+
+    .sub-list li {
+        margin: 5px;
+        padding: 5px;
+    }
+
+.main-list li:hover .sub-list {
+    display: block;
+}
+
+.main-list li {
+    border: none;
+    padding: 0px;
+}
+
+
+
+/* Стилі для рухаючого заголовка */
+@keyframes moveHeader {
+    0%
+
+{
+    transform: translateY(0);
+}
+
+50% {
+    transform: translateY(-10px);
+}
+
+100% {
+    transform: translateY(0);
+}
+
+}
+
+.moving-header {
+    animation: moveHeader 2s infinite; /* Анімація буде тривати 2 секунди та повторюватися нескінченно */
+}
+
+
+
+/* Стилі для рухаючої реклами знизу */
+@keyframes moveBottomAdvertisement {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.bottom-advertisement {
+    overflow: hidden;
+    position: relative;
+}
+
+    .bottom-advertisement img {
+        width: 100%;
+        height: auto;
+        animation: moveBottomAdvertisement 5s linear infinite; /* Анімація буде тривати 5 секунд та повторюватися нескінченно */
+    }
+
+
+
+ blue;

@@ -21,11 +21,21 @@ namespace Movies.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? GenreId = null)
         {
-            var applicationDbContext = _context.Movies.Include(m => m.Genre)
-                .Select(m => new MovieViewModel(m));
-            return View(await applicationDbContext.ToListAsync());
+            if(GenreId != null)
+            {
+                var applicationDbContext = _context.Movies.
+                 Where(x => x.GenreId == GenreId).Include(m => m.Genre)
+                .Select(m => new MovieViewModel(m)).ToListAsync();
+                return View(applicationDbContext);
+            }
+            else
+            {
+                var applicationDbContext = _context.Movies.Include(m => m.Genre)
+                    .Select(m => new MovieViewModel(m)).ToListAsync();
+                return View(applicationDbContext);
+            }
         }
 
         // GET: Movies/Details/5
