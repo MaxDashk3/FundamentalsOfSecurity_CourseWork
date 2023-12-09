@@ -4,6 +4,7 @@ using Movies.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Movies.ViewModels;
+using System.Runtime.CompilerServices;
 
 namespace Movies.Controllers
 {
@@ -20,15 +21,15 @@ namespace Movies.Controllers
             if (MovieId != null)
             {
                 var applicationDbContext = _db.Sessions.
-                 Where(x => x.MovieId == MovieId).Include(m => m.Movie).Include(h => h.Hall)
-                .Select(m => new SessionViewModel(m)).ToListAsync();
-                return View(await applicationDbContext);
+                 Include(m => m.Movie).Include(h => h.Hall).FirstOrDefaultAsync(x => x.MovieId == MovieId);
+                return View(new SessionViewModel(await applicationDbContext));
             }
             else
             {
                 var applicationDbContext = _db.Sessions.Include(m => m.Movie).Include(h => h.Hall)
-                    .Select(m => new SessionViewModel(m)).ToListAsync();
-                return View(await applicationDbContext);
+                    .FirstOrDefaultAsync(x => x.MovieId == MovieId);
+                var result = new SessionViewModel(await applicationDbContext);
+                return View(result);
             }
         }
         public IActionResult Create()
