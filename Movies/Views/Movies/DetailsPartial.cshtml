@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <img src="@Model.PhotoPath" alt="Movie Photo" class="img-fluid" />
+        <img  src="@Url.Action("ShowImage", "Movies", new { id = Model.Id })" alt="Movie Photo" class="img-fluid" />
     </div>
     <div class="col-sm-6">
         <dl class="row">

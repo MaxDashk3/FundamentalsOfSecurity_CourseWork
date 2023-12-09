@@ -72,9 +72,11 @@ namespace Movies.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MovieViewModel model)
+        public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
         {
-            if (ModelState.IsValid)
+            model.Poster = FileToBytes(Poster);
+            ModelState.Clear();
+            if (TryValidateModel(model))
             {
                 var movie = new Movie(model);
                 _context.Add(movie);
@@ -83,6 +85,14 @@ namespace Movies.Controllers
             }
             ViewBag.Genres = _context.Genres.ToList();
             return View();
+        }
+
+        public byte[] FileToBytes(IFormFile file)
+        {
+            BinaryReader reader = new BinaryReader(file.OpenReadStream());
+            byte [] imageBytes = reader.ReadBytes((int)file.Length);
+            return imageBytes;
+
         }
 
         // GET: Movies/Edit/5
@@ -176,6 +186,20 @@ namespace Movies.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        public ActionResult ShowImage(int id)
+        {
+            var movie = _context.Movies.Find(id);
+            if (movie != null)
+            {
+                return File(movie.Poster, "image/jpeg"); // You can set the appropriate content type.
+            }
+            else
+            {
+                return Content("Image not found");
+            }
+        }
+
 
         private bool MovieExists(int id)
         {
