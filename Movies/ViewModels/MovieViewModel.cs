@@ -26,7 +26,7 @@ namespace Movies.ViewModels
         [Required]
         public string Description { get; set; }
         [Required]
-        public string PhotoPath { get; set; }
+        public byte[] Poster { get; set; }
         [Required]
         public string VideoPath { get; set; }
 
@@ -40,7 +40,7 @@ namespace Movies.ViewModels
             Year = movie.Year;
             GenreId = movie.GenreId;
             Description = movie.Description;
-            PhotoPath = movie.PhotoPath;
+            Poster = movie.Poster;
             VideoPath = movie.VideoPath;
 
             if (movie.Sessions != null)
