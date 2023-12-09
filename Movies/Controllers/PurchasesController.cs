@@ -78,6 +78,7 @@ namespace Movies.Controllers
             if (ModelState.IsValid)
             {
                 List<Ticket> tickets = _context.Tickets
+                .Where(t => t.UserId == _manager.GetUserId(User))
                 .Where(t => t.PurchaseId == null)
                 .ToList();
 
