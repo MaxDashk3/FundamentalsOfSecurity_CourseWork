@@ -17,7 +17,7 @@ namespace Movies.Controllers
             var valid = !_context.Genres.Any(g => g.Name == Name);
             return Json(valid);
         }
-        public ActionResult FilmsValidation(string Title)
+        public ActionResult MoviesValidation(string Title)
         {
             bool valid = !_context.Movies.Any(m => m.Title == Title);
             return Json(valid);
