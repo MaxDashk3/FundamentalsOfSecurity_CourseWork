@@ -28,13 +28,13 @@ namespace Movies.Controllers
                 var applicationDbContext = _context.Movies.
                  Where(x => x.GenreId == GenreId).Include(m => m.Genre)
                 .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(applicationDbContext);
+                return View(await applicationDbContext);
             }
             else
             {
                 var applicationDbContext = _context.Movies.Include(m => m.Genre)
                     .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(applicationDbContext);
+                return View(await applicationDbContext);
             }
         }
 
