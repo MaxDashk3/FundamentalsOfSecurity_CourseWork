@@ -21,15 +21,16 @@ namespace Movies.Controllers
             if (MovieId != null)
             {
                 var applicationDbContext = _db.Sessions.
-                 Include(m => m.Movie).Include(h => h.Hall).FirstOrDefaultAsync(x => x.MovieId == MovieId);
-                return View(new SessionViewModel(await applicationDbContext));
+                 Include(m => m.Movie).Include(h => h.Hall)
+                 .Select(x => new SessionViewModel(x)).ToListAsync();
+                return View(await applicationDbContext);
             }
             else
             {
-                var applicationDbContext = _db.Sessions.Include(m => m.Movie).Include(h => h.Hall)
-                    .FirstOrDefaultAsync(x => x.MovieId == MovieId);
-                var result = new SessionViewModel(await applicationDbContext);
-                return View(result);
+                var applicationDbContext = _db.Sessions.
+                    Include(m => m.Movie).Include(h => h.Hall)
+                    .Select(x => new SessionViewModel(x)).ToListAsync();
+                return View(await applicationDbContext);
             }
         }
         public IActionResult Create()

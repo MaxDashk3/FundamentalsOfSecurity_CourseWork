@@ -11,7 +11,7 @@ namespace Movies.ViewModels
         public int Id { get; set; }
         public string? Genre { get; set; }
 
-        [Remote(action: "Validation", controller: "Movies", ErrorMessage = "Title already exists!!!")]
+        [Remote(action: "MoviesValidation", controller: "Data", ErrorMessage = "Title already exists!!!")]
         [Required(ErrorMessage = "This field is required")]
         public string Title { get; set; }
 

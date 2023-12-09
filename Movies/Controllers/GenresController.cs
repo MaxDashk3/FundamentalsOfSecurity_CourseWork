@@ -146,10 +146,5 @@ namespace Movies.Controllers
         {
           return (_context.Genres?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        public ActionResult Validation(string Name)
-        {
-            var valid = !_context.Genres.Any(g => g.Name == Name);
-            return Json(valid);
-        }
     }
 }

@@ -181,10 +181,5 @@ namespace Movies.Controllers
         {
             return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        public ActionResult Validation(string Title)
-        {
-            bool valid = !_context.Movies.Any(m => m.Title == Title);
-            return Json(valid);
-        }
     }
 }
