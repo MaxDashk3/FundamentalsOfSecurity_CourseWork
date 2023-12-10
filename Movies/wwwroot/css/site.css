@@ -220,11 +220,16 @@ td, th {
     position: relative;
 }
 
-    .bottom-advertisement img {
-        width: 100%;
-        height: auto;
-        animation: moveBottomAdvertisement 5s linear infinite;
-    }
+.bottom-advertisement img {
+    width: 100%;
+    height: auto;
+    animation: moveBottomAdvertisement 5s linear infinite;
+<<<<<<<<< Temporary merge branch 1
+
+=========
+   
+>>>>>>>>> Temporary merge branch 2
+}
 
 
 

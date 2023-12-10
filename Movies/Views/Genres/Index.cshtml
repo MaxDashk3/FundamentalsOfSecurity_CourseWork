@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Movies.Models.Genre>
+﻿@model IEnumerable<Movies.ViewModels.GenreViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -18,7 +18,7 @@
                 {
                     <div class="genre">
                         <h2>@item.Name</h2>
-                        <a asp-controller="Genres" asp-action="Read" asp-route-GenreId="@item.Id">Details</a>
+                        <a asp-controller="Genres" asp-action="Details" asp-route-Id="@item.Id">Details</a>
                     </div>
                 }
             </div>
