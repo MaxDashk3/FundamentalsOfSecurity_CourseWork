@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -60,16 +62,14 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        // GET: Movies/Create
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             ViewBag.Genres = _context.Genres.ToList();
             return View();
         }
 
-        // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
@@ -95,7 +95,7 @@ namespace Movies.Controllers
 
         }
 
-        // GET: Movies/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Movies == null)
@@ -112,9 +112,7 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MovieViewModel model)
@@ -149,7 +147,7 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        // GET: Movies/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Movies == null)
@@ -168,7 +166,7 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        // POST: Movies/Delete/5
+        [Authorize(Roles = "Admins")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -38,7 +38,7 @@ namespace Movies.Controllers
 
             return View(purchases);
         }
-
+        [Authorize]
         public IActionResult MyPurchases()
         {
             var purchases = _context.Purchases
@@ -77,8 +77,7 @@ namespace Movies.Controllers
             return View(new PurchaseViewModel(purchase));
         }
 
-        // GET: Purchases/Create
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             ViewBag.UserId = _manager.GetUserId(User);
@@ -86,7 +85,7 @@ namespace Movies.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create(PurchaseViewModel model)
         {
             var purchase = new Purchase(model);
@@ -121,7 +120,7 @@ namespace Movies.Controllers
             }
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Purchases == null)
@@ -138,9 +137,7 @@ namespace Movies.Controllers
             return View(new PurchaseViewModel(purchase));
         }
 
-        // POST: Purchases/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, PurchaseViewModel model)
@@ -170,7 +167,7 @@ namespace Movies.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Purchases/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Purchases == null)
@@ -187,10 +184,9 @@ namespace Movies.Controllers
 
             return View(new PurchaseViewModel(purchase));
         }
-
-        // POST: Purchases/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Purchases == null)
