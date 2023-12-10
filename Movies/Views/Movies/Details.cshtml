@@ -4,8 +4,6 @@
     ViewData["Title"] = "Movie Details";
 }
 
-<h1>@Model.Title</h1>
-
 <div>
     <hr />
     @{
@@ -17,3 +15,9 @@
 </div>
 <br />
 <br />
+<div>
+    <h4>Availible sessions:</h4>
+    @{
+        await Html.RenderPartialAsync("SessionsTable", Model);
+    }
+</div>

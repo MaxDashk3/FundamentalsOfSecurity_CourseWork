@@ -72,6 +72,7 @@ namespace Movies.Controllers
                 .Include(t => t.Session.Hall)
                 .Include(t => t.Session.Movie.Genre)
                 .Include(t => t.Purchase)
+                .Include(t => t.User)
                 .Select(t => new TicketViewModel(t))
                 .ToList();
 
