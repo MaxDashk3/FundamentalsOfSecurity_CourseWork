@@ -195,3 +195,17 @@ td {
     margin-top: 20vw;
     margin-left: 3vw
 }
+
+.adapt-float{
+    float: left;
+}
+
+@media only screen and (max-width: 600px) {
+    .adapt-float {
+        width: 100%;
+    }
+}
+
+.flex {
+    display:flex
+}

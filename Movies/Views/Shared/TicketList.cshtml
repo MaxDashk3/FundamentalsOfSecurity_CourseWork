@@ -1,4 +1,4 @@
-﻿@model Movies.ViewModels.PurchaseViewModel
+﻿@model List<Movies.ViewModels.TicketViewModel>
 
 <table class="table">
     <thead>
@@ -25,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var t in Model.Tickets)
+        @foreach (var t in Model)
         {
             <tr>
                 <td>
