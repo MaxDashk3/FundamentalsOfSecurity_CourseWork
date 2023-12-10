@@ -33,12 +33,13 @@ namespace Movies.ViewModels
             SeatRow = ticket.SeatRow;
             UserId = ticket.UserId;
 
+            if (ticket.User != null)
+            {
+                BoughtBy = ticket.User.UserName;
+            }
+
             if (ticket.Purchase != null)
             {
-                if (ticket.Purchase.User != null) 
-                {
-                    BoughtBy = ticket.Purchase.User.UserName;
-                }
                 DateOfPurchase = ticket.Purchase.Date;
             }
 
