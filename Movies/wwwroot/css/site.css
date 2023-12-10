@@ -110,7 +110,7 @@ td {
 
 
 
-/* ���� ��� ��������� ��������� */
+
 @keyframes moveHeader {
     0% {
         transform: translateY(0);
@@ -128,12 +128,12 @@ td {
 
 .moving-header {
     animation: moveHeader 2s infinite;
-    /* �������� ���� ������� 2 ������� �� ������������� ���������� */
+
 }
 
 
 
-/* ���� ��� ������� ������� ����� */
+
 @keyframes moveBottomAdvertisement {
     0% {
         transform: translateX(-100%);
@@ -153,9 +153,8 @@ td {
     width: 100%;
     height: auto;
     animation: moveBottomAdvertisement 5s linear infinite;
-    /* �������� ���� ������� 5 ������ �� ������������� ���������� */
+ 
 }
 
 
 
-blue;
