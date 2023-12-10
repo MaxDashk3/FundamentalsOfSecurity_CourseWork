@@ -11,16 +11,16 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-@foreach (var movie in Model)
+@foreach (var session in Model)
 {
-    <h3><a href="/movies/Details/@movie.Id">@movie.Title</a></h3>
+    <h3><a href="/movies/Details/@session.MovieId">some data</a></h3>
     <details>
         <summary></summary>
         <br />
         <div>
             <h4>Availible sessions:</h4>
             @{
-               // await Html.RenderPartialAsync("SessionsTable", movie);
+                await Html.RenderPartialAsync("~/Views/Shared/SessionsTable.cshtml", session);
             }
         </div>
         <br />

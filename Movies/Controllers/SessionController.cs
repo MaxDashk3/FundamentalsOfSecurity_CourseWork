@@ -40,18 +40,12 @@ namespace Movies.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(SessionViewModel sessionViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Sessions.Add(new Session(sessionViewModel));
-                _db.SaveChanges();
-
-                return RedirectToAction("Index");
-            }
-            ViewBag.Movies = _db.Movies.ToList();
-            ViewBag.Halls = _db.Halls.ToList();
-            return View();
+            _db.Sessions.Add(new Session(sessionViewModel));
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)

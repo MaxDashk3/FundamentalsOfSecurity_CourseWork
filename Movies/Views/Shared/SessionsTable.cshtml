@@ -1,4 +1,4 @@
-﻿@model Movies.ViewModels.MovieViewModel
+﻿@model Movies.ViewModels.SessionViewModel
 
 <table class="table">
     <thead>
@@ -12,35 +12,31 @@
             <th>
                 Price
             </th>
-
             <th></th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Sessions)
-        {
-            <tr class="@(item.TimeDate < DateTime.Now? "unav_session" : "" )">
+        <tr class="@(Model.TimeDate < DateTime.Now? "unav_session" : "" )">
                 <td>
-                    @Html.DisplayFor(modelItem => item.TimeDate)
+                    @Html.DisplayFor(modelItem => Model.TimeDate)
                 </td>
                 <td>
-                    @item.Hall
+                    @Model.Hall
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => Model.Price)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
                 </td>
                 <td>
-                    <a href="@(item.TimeDate < DateTime.Now ? "" : $"/Tickets/Create/{item.Id}")">
-                        <button @(item.TimeDate < DateTime.Now ? "disabled" : "")>Book a seat</button>
+                    <a href="@(Model.TimeDate < DateTime.Now ? "" : $"/Tickets/Create/{Model.Id}")">
+                        <button @(Model.TimeDate < DateTime.Now ? "disabled" : "")>Book a seat</button>
                     </a>
                 </td>
             </tr>
-        }
     </tbody>
 </table>
