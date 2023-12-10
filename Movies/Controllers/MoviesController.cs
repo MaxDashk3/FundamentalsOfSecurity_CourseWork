@@ -21,20 +21,27 @@ namespace Movies.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index(int? GenreId = null)
+        public async Task<IActionResult> Index(int? GenreId = null, int? MovieId = null)
         {
-            if(GenreId != null)
+            if (GenreId != null)
             {
                 var applicationDbContext = _context.Movies.
                  Where(x => x.GenreId == GenreId).Include(m => m.Genre)
                 .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(applicationDbContext);
+                return View(await applicationDbContext);
+            }
+            else if (MovieId != null)
+            {
+                var applicationDbContext = _context.Movies
+                    .Where(x => x.Id == MovieId).Include(m => m.Genre)
+                    .Select(m => new MovieViewModel(m)).ToListAsync();
+                return View(await applicationDbContext);
             }
             else
             {
                 var applicationDbContext = _context.Movies.Include(m => m.Genre)
                     .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(applicationDbContext);
+                return View(await applicationDbContext);
             }
         }
 
@@ -65,9 +72,11 @@ namespace Movies.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MovieViewModel model)
+        public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
         {
-            if (ModelState.IsValid)
+            model.Poster = FileToBytes(Poster);
+            ModelState.Clear();
+            if (TryValidateModel(model))
             {
                 var movie = new Movie(model);
                 _context.Add(movie);
@@ -76,6 +85,14 @@ namespace Movies.Controllers
             }
             ViewBag.Genres = _context.Genres.ToList();
             return View();
+        }
+
+        public byte[] FileToBytes(IFormFile file)
+        {
+            BinaryReader reader = new BinaryReader(file.OpenReadStream());
+            byte [] imageBytes = reader.ReadBytes((int)file.Length);
+            return imageBytes;
+
         }
 
         // GET: Movies/Edit/5
@@ -165,14 +182,28 @@ namespace Movies.Controllers
             {
                 _context.Movies.Remove(movie);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        public ActionResult ShowImage(int id)
+        {
+            var movie = _context.Movies.Find(id);
+            if (movie != null)
+            {
+                return File(movie.Poster, "image/jpeg"); // You can set the appropriate content type.
+            }
+            else
+            {
+                return Content("Image not found");
+            }
+        }
+
+
         private bool MovieExists(int id)
         {
-          return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

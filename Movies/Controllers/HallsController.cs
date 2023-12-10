@@ -18,16 +18,17 @@ namespace Movies.Controllers
         {
             _context = context;
         }
-
-        // GET: Halls
         public async Task<IActionResult> Index()
         {
-              return _context.Halls != null ? 
-                          View(await _context.Halls.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
+            if (_context.Halls != null)
+            {
+                return View(await _context.Halls.ToListAsync());
+            }
+            else
+            {
+                return Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
+            }
         }
-
-        // GET: Halls/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Halls == null)
@@ -44,16 +45,10 @@ namespace Movies.Controllers
 
             return View(hall);
         }
-
-        // GET: Halls/Create
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Halls/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
