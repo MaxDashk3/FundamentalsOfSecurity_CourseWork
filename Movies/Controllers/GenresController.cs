@@ -55,7 +55,7 @@ namespace Movies.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Genre genre)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && new DataController(_context).GenresValidation(genre.Name))
             {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();

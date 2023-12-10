@@ -5,52 +5,55 @@
     ViewData["Title"] = "Create Ticket";
 }
 
-<h1>Create a ticket</h1>
+<h4>Book a seat</h4>
 
-<h4>Ticket</h4>
+<h4>@ViewBag.Session.Movie @ViewBag.Session.TimeDate</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div style="width:440px">
+    <div class="row">
         <h4>Choose your seat:</h4>
         <br />
         <form action="/Tickets/Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input name="UserId" value="@ViewBag.UserId" hidden />
-            </div>
-            <div class="form-group">
-                <input name="SessionId" value="@ViewBag.SessionId" hidden />
-            </div>
-            <table class="col-12">
-                <tr>
-                    <th></th>
-                    @for (int i = 1; i <= ViewBag.Hall.SeatsPerRow; i++)
-                    {
-                        <th>@i</th>
-                    }
-                </tr>
-                @for (int i = 1; i <= ViewBag.Hall.Rows; i++)
-                {
-                    <tr class="col-12">
-                        <th>@i</th>
-                        @for (int n = 1; n <= ViewBag.Hall.SeatsPerRow; n++)
+            <input name="UserId" value="@ViewBag.UserId" hidden />
+
+            <input name="SessionId" value="@ViewBag.Session.Id" hidden />
+
+            <div class="adapt-float">
+                <div class="screen col-12">
+                    <h5>Screen</h5>
+                </div>
+                <table class="col-12">
+                    <tr>
+                        <th></th>
+                        @for (int i = 1; i <= ViewBag.Hall.SeatsPerRow; i++)
                         {
-                            <td>
-                                <input class="seat" type="radio" name="Seat" value="@i @n"
-                                @(ViewBag.TakenSeats.Contains($"{i} {n}") ? "disabled": "")   
-                                >
-                            </td>
+                            <th>@i</th>
                         }
                     </tr>
-                }
-            </table>
-            <br />
-            <input type="submit" value="Submit" class="btn btn-primary"/>
+                    @for (int i = 1; i <= ViewBag.Hall.Rows; i++)
+                    {
+                        <tr class="col-12">
+                            <th>@i</th>
+                            @for (int n = 1; n <= ViewBag.Hall.SeatsPerRow; n++)
+                            {
+                                <td>
+                                    <input class="seat" type="radio" name="Seat" value="@i @n"
+                                    @(ViewBag.TakenSeats.Contains($"{i} {n}") ? "disabled": "")   
+                                    >
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+                <br />
+            </div>
+            <div class="adapt-float col-4">
+                <input type="submit" value="Confirm" class="btn btn-primary"/>
+                <br />
+                <a href="/Session/Index">Back to List</a>
+            </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a href="/Session/Index">Back to List</a>
 </div>
 

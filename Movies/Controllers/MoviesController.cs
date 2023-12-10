@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Humanizer.Localisation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -76,7 +77,7 @@ namespace Movies.Controllers
         {
             model.Poster = FileToBytes(Poster);
             ModelState.Clear();
-            if (TryValidateModel(model))
+            if (TryValidateModel(model) && new DataController(_context).GenresValidation(model.Title))
             {
                 var movie = new Movie(model);
                 _context.Add(movie);

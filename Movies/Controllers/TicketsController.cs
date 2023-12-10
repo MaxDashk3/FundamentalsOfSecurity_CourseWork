@@ -43,7 +43,7 @@ namespace Movies.Controllers
                     .ToList();
 
                 ViewBag.Hall = session.Hall;
-                ViewBag.SessionId = session.Id;
+                ViewBag.Session = sModel;
                 ViewBag.TakenSeats = takenseats;
                 ViewBag.UserId = _manager.GetUserId(User);
                 return View();

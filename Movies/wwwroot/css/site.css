@@ -30,7 +30,7 @@ body {
 }
 
 input[type=radio] {
-    padding: 20px;
+    padding: 13px;
     -webkit-appearance: none;
     outline: unset;
     background-color: lightgray;
@@ -38,15 +38,26 @@ input[type=radio] {
 
 input[type=radio]:checked {
     display: inline-block;
-    background-color: green;
-    accent-color: green;
+    background-color: rgb(0, 132, 172);
+    accent-color: rgb(0, 132, 172);
 }
 
 input[type=radio]:disabled {
     display: inline-block;
-    background-color: red;
-    accent-color: red;
+    background-color: #5f5f5f;
+    accent-color: #c0c0c0;
 }
+
+.screen {
+    background-color: #353535;
+    color: white;
+    height: 30px;
+    margin: 5px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 td {
     padding: 0px 3px;
