@@ -1,27 +1,31 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-.unav_session{
+.unav_session {
     color: gray;
 }
 
@@ -35,7 +39,7 @@ input[type=radio] {
 input[type=radio]:checked {
     display: inline-block;
     background-color: green;
-    accent-color:green;
+    accent-color: green;
 }
 
 input[type=radio]:disabled {
@@ -44,8 +48,8 @@ input[type=radio]:disabled {
     accent-color: red;
 }
 
-td{
-    padding:0px 3px;
+td {
+    padding: 0px 3px;
 }
 
 .genres {
@@ -64,6 +68,7 @@ td{
     margin-top: 20px;
     text-align: center;
 }
+
 .main-list {
     list-style: none;
     margin: 0;
@@ -71,12 +76,12 @@ td{
     display: flex;
 }
 
-    .main-list li {
-        padding: 10px;
-        margin: 5px;
-        cursor: pointer;
-        position: relative;
-    }
+.main-list li {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    position: relative;
+}
 
 .sub-list {
     display: none;
@@ -89,10 +94,10 @@ td{
     padding-left: 0;
 }
 
-    .sub-list li {
-        margin: 5px;
-        padding: 5px;
-    }
+.sub-list li {
+    margin: 5px;
+    padding: 5px;
+}
 
 .main-list li:hover .sub-list {
     display: block;
@@ -105,31 +110,30 @@ td{
 
 
 
-/* Стилі для рухаючого заголовка */
+/* пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 @keyframes moveHeader {
-    0%
+    0% {
+        transform: translateY(0);
+    }
 
-{
-    transform: translateY(0);
-}
+    50% {
+        transform: translateY(-10px);
+    }
 
-50% {
-    transform: translateY(-10px);
-}
-
-100% {
-    transform: translateY(0);
-}
+    100% {
+        transform: translateY(0);
+    }
 
 }
 
 .moving-header {
-    animation: moveHeader 2s infinite; /* Анімація буде тривати 2 секунди та повторюватися нескінченно */
+    animation: moveHeader 2s infinite;
+    /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 }
 
 
 
-/* Стилі для рухаючої реклами знизу */
+/* пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
 @keyframes moveBottomAdvertisement {
     0% {
         transform: translateX(-100%);
@@ -145,12 +149,13 @@ td{
     position: relative;
 }
 
-    .bottom-advertisement img {
-        width: 100%;
-        height: auto;
-        animation: moveBottomAdvertisement 5s linear infinite; /* Анімація буде тривати 5 секунд та повторюватися нескінченно */
-    }
+.bottom-advertisement img {
+    width: 100%;
+    height: auto;
+    animation: moveBottomAdvertisement 5s linear infinite;
+    /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 5 пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
+}
 
 
 
- blue;
+blue;

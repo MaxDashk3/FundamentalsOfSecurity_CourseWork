@@ -39,6 +39,22 @@ namespace Movies.Controllers
             return View(purchases);
         }
 
+        public IActionResult MyPurchases()
+        {
+            var purchases = _context.Purchases
+                .Include(p => p.Tickets)
+                .Include("Tickets.Session")
+                .Include("Tickets.Session.Movie")
+                .Include("Tickets.Session.Hall")
+                .Include("Tickets.User")
+                .Where(t => t.UserId == _manager.GetUserId(User))
+                .Select(p => new PurchaseViewModel(p))
+                .ToList();
+
+            return View(purchases);
+        }
+
+
         // GET: Purchases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
