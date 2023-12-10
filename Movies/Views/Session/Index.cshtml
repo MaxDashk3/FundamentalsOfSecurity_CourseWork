@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Movies.ViewModels.MovieViewModel>
+@using Movies.ViewModels;
+@model List<MovieViewModel>
 
 @{
     ViewData["Title"] = "Sessions";
@@ -19,7 +20,7 @@
         <div>
             <h4>Availible sessions:</h4>
             @{
-                await Html.RenderPartialAsync("SessionsTable", movie);
+                await Html.RenderPartialAsync("~/Views/Shared/SessionsTable.cshtml", movie.Sessions);
             }
         </div>
         <br />
