@@ -1,4 +1,4 @@
-﻿@model List<SessionViewModel>
+﻿@model List<MovieViewModel>
 @using Movies.ViewModels
 
 @{
@@ -11,16 +11,16 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-@foreach (var session in Model)
+@foreach (var movie in Model)
 {
-    <h3><a href="/movies/Details/@session.MovieId">some data</a></h3>
+    <h3><a href="/movies/Details/@movie.Id">@movie.Title</a></h3>
     <details>
         <summary></summary>
         <br />
         <div>
             <h4>Availible sessions:</h4>
             @{
-                await Html.RenderPartialAsync("~/Views/Shared/SessionsTable.cshtml", session);
+                await Html.RenderPartialAsync("~/Views/Shared/SessionsTable.cshtml", movie.Sessions);
             }
         </div>
         <br />
