@@ -77,7 +77,7 @@ namespace Movies.Controllers
         {
             model.Poster = FileToBytes(Poster);
             ModelState.Clear();
-            if (TryValidateModel(model) && new DataController(_context).GenresValidation(model.Title))
+            if (TryValidateModel(model) && new DataController(_context).MoviesValidation(model.Title))
             {
                 var movie = new Movie(model);
                 _context.Add(movie);
@@ -118,11 +118,13 @@ namespace Movies.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, MovieViewModel model)
+        public async Task<IActionResult> Edit(int id, MovieViewModel model, IFormFile Poster)
         {
             var movie = new Movie(model);
+            model.Poster = FileToBytes(Poster);
+            ModelState.Clear();
 
-            if (ModelState.IsValid)
+            if (TryValidateModel(model) && new DataController(_context).MoviesValidation(model.Title))
             {
                 if (id != movie.Id)
                 {

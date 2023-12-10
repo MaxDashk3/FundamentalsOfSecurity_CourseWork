@@ -17,9 +17,13 @@ namespace Movies.Controllers
             var valid = !_context.Genres.Any(g => g.Name == Name);
             return valid;
         }
-        public bool MoviesValidation(string Title)
+        public bool MoviesValidation(string Title, int? id = null)
         {
             bool valid = !_context.Movies.Any(m => m.Title == Title);
+            if (id != null)
+                if (_context.Movies.Find(id).Title == Title)
+                    valid = true;
+
             return valid;
         }
     }
