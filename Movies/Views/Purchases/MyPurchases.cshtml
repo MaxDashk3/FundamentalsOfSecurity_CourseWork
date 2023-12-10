@@ -32,7 +32,7 @@
                 <details>
                     <summary>Tickets</summary>
                         @{
-                            await Html.RenderPartialAsync("PurchasedTickets", item);
+                            await Html.RenderPartialAsync("TicketList", item.Tickets);
                         }
                 </details>
             </td>
