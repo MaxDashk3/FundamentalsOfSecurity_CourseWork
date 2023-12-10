@@ -3,12 +3,17 @@
 
 @{
     ViewData["Title"] = "Sessions";
+
+    bool Admin = User.IsInRole("Admins");
 }
 
 <h1>Sessions</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (Admin)
+    {
+        <a asp-action="Create">Create New</a>
+    }
 </p>
 
 @foreach (var movie in Model)

@@ -1,5 +1,7 @@
 ﻿@model List<Movies.ViewModels.TicketViewModel>
-
+@{
+    bool Admin = User.IsInRole("Admins");
+}
 <table class="table">
     <thead>
         <tr>
@@ -21,7 +23,10 @@
             <th>
                 Price
             </th>
-            <th></th>
+            @if (Admin)
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -46,9 +51,12 @@
                 <td>
                     @t.Price
                 </td>
+                @if (Admin)
+                {
                 <td>
-                    <a asp-action="Delete" asp-route-id="@t.Id">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@t.Id">Delete</a>
                 </td>
+                }
             </tr>
         }
     </tbody>
