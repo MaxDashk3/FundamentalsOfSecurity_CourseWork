@@ -1,5 +1,4 @@
-﻿@model List<Movies.ViewModels.SessionViewModel>
-
+@model List<Movies.ViewModels.SessionViewModel>
 
 <table class="table">
     <thead>
@@ -19,6 +18,7 @@
         </tr>
     </thead>
     <tbody>
+<<<<<<< 
         @foreach (var item in Model)
         {
             <tr class="@(item.TimeDate < DateTime.Now? "unav_session" : "" )">

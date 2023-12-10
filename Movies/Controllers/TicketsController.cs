@@ -24,8 +24,7 @@ namespace Movies.Controllers
             _manager = manager;
         }
 
-        // GET: Tickets
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create(int id)
         {
             var session = _context.Sessions
@@ -51,7 +50,7 @@ namespace Movies.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create(TicketViewModel model)
         {
             model.SeatRow = Convert.ToInt16(model.Seat.Remove(model.Seat.IndexOf(' ')));
@@ -72,6 +71,7 @@ namespace Movies.Controllers
                 .Include(t => t.Session.Hall)
                 .Include(t => t.Session.Movie.Genre)
                 .Include(t => t.Purchase)
+                .Include(t => t.User)
                 .Select(t => new TicketViewModel(t))
                 .ToList();
 
@@ -97,7 +97,7 @@ namespace Movies.Controllers
             return View(ticket);
         }
 
-        // GET: Tickets/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -118,7 +118,7 @@ namespace Movies.Controllers
             return View(model);
         }
 
-        // POST: Tickets/Delete/5
+        [Authorize(Roles = "Admins")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

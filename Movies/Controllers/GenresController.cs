@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,12 +49,14 @@ namespace Movies.Controllers
 
             return View(genre);
         }
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create([Bind("Id,Name")] Genre genre)
         {
             if (ModelState.IsValid)
@@ -63,6 +67,7 @@ namespace Movies.Controllers
             }
             return View();
         }
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Genres == null)
@@ -79,6 +84,7 @@ namespace Movies.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Genre genre)
         {
             if (ModelState.IsValid)
@@ -108,6 +114,7 @@ namespace Movies.Controllers
             }
             return View(genre);
         }
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Genres == null)
@@ -126,6 +133,7 @@ namespace Movies.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int id)
         {
             if (_context.Genres == null)

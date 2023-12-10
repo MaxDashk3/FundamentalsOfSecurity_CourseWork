@@ -16,7 +16,7 @@
 <div>
     <h2>Tickets</h2>
     @{
-        await Html.RenderPartialAsync("PurchasedTickets", Model);
+        await Html.RenderPartialAsync("TicketList", Model.Tickets);
     }
 
 </div>

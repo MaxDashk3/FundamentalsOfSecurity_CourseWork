@@ -58,18 +58,25 @@
             <td>
                 @item.Price
             </td>
-            @if(item.PurchaseId!= null)
+
+            @if(item.BoughtBy!= null)
             {
                 <td>
-                    @item.BoughtBy
+                    @item.BoughtBy;
                 </td>
+            }
+            else
+            {
+                <td>-</td>
+            }
+            @if(item.PurchaseId!= null)
+            {
                 <td>
                     @item.DateOfPurchase
                 </td>
             }
             else
             {
-                <td>-</td>
                 <td>-</td>
             }
             <td>

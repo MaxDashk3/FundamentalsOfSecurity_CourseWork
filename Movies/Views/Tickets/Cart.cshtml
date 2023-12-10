@@ -2,59 +2,22 @@
 @{
     ViewData["Title"] = "Cart";
     int total = 0;
+    foreach(var item in Model)
+    {
+        total += item.Price;
+    }
+
     bool isempty = Model.Count() == 0 ? true : false;
 }
 
 <h1>Cart</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Movie
-            </th>
-            <th>
-                Date and time
-            </th>
-            <th>
-                Row and Seat
-            </th>
-            <th>
-                Hall
-            </th>
-            <th>
-                Price
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            total += item.Price;
-            <tr>
-                <td>
-                    <a href="/Movies/Details/@item.MovieId">@item.Movie</a>
-                </td>
-                <td>
-                    @item.SessionTime
-                </td>
-                <td>
-                    @item.Seat
-                </td>
-                <td>
-                    @item.Hall
-                </td>
-                <td>
-                    @item.Price
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<br />
-<p>Total: @total</p>
-<a @(isempty ? "" : "href=/Purchases/Create")><button class="btn-primary btn" @(isempty ? "disabled" : "")>Buy All</button></a>
+<div class="col-8 adapt-float" style="border-right:solid black 1px; padding-right:30px">
+@{
+    await Html.RenderPartialAsync("TicketList", Model.ToList());
+}
+</div>
+<div class="col-4 adapt-float" style="padding:30px;">
+    <p>Total: @total</p>
+    <a @(isempty ? "" : "href=/Purchases/Create")><button class="btn-primary btn" @(isempty ? "disabled" : "")>Buy All</button></a>
+</div>
 

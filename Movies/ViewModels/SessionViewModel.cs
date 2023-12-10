@@ -10,7 +10,6 @@ namespace Movies.ViewModels
         public int Id { get; set; }
         public int HallId { get; set; }
         public int? Hall { get; set; }
-        public string Title { get; set; }
         public string? Movie { get; set; }
         public int MovieId { get; set; }
         [Required(ErrorMessage = "This field is required")]

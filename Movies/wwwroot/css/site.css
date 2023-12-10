@@ -153,8 +153,58 @@ td {
     width: 100%;
     height: auto;
     animation: moveBottomAdvertisement 5s linear infinite;
- 
+
 }
 
 
 
+.video-container {
+    width: 100%;
+    height: 30vw;
+    overflow: hidden;
+    position: relative;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: -60px;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 120px);
+}
+
+.video-overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    background-color: #00000075;
+}
+
+.movie-title {
+    color: white;
+    margin-top: 20vw;
+    margin-left: 3vw
+}
+
+.adapt-float {
+    float: left;
+}
+
+@media only screen and (max-width: 600px) {
+    .adapt-float {
+        width: 100%;
+    }
+}
+
+.flex {
+    display: flex
+}
