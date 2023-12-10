@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -45,12 +47,14 @@ namespace Movies.Controllers
 
             return View(hall);
         }
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create([Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
         {
             if (ModelState.IsValid)
@@ -62,7 +66,7 @@ namespace Movies.Controllers
             return View();
         }
 
-        // GET: Halls/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Halls == null)
@@ -78,9 +82,7 @@ namespace Movies.Controllers
             return View(hall);
         }
 
-        // POST: Halls/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
@@ -113,7 +115,7 @@ namespace Movies.Controllers
             return View(hall) ;
         }
 
-        // GET: Halls/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Halls == null)
@@ -131,7 +133,7 @@ namespace Movies.Controllers
             return View(hall);
         }
 
-        // POST: Halls/Delete/5
+        [Authorize(Roles = "Admins")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

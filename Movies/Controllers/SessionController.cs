@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Movies.ViewModels;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Movies.Controllers
 {
@@ -28,6 +30,7 @@ namespace Movies.Controllers
             
             return View(movies);
         }
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             ViewBag.Movies = _db.Movies.ToList();
@@ -35,6 +38,7 @@ namespace Movies.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create(SessionViewModel sessionViewModel)
         {
             if (ModelState.IsValid)
@@ -48,7 +52,7 @@ namespace Movies.Controllers
             ViewBag.Halls = _db.Halls.ToList();
             return View();
         }
-
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _db.Sessions == null)
@@ -66,9 +70,7 @@ namespace Movies.Controllers
             return View(new SessionViewModel(session));
         }
 
-        // POST: Sessions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SessionViewModel vmodel)
@@ -103,7 +105,7 @@ namespace Movies.Controllers
             return View(new SessionViewModel(session));
         }
 
-        // GET: Sessions/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _db.Sessions == null)
@@ -127,6 +129,7 @@ namespace Movies.Controllers
         // POST: Sessions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_db.Sessions == null)
