@@ -16,7 +16,7 @@
     await Html.RenderPartialAsync("TicketList", Model.ToList());
 }
 </div>
-<div class="col-4 adapt-float" padding:30px;">
+<div class="col-4 adapt-float padding:30px;">
     <p>Total: @total</p>
     <a @(isempty ? "" : "href=/Purchases/Create")><button class="btn-primary btn" @(isempty ? "disabled" : "")>Buy All</button></a>
 </div>
