@@ -12,7 +12,7 @@
         <div class="col-md-8">
 
             <!-- Додайте клас moving-header для рухаючого заголовка -->
-            <h2 class="text-center moving-header">Оберіть жанр який вам до вподоби!</h2>
+            <h2 class="text-center moving-header">Pick a genre that you like!</h2>
 
 
             <div class="genres">
@@ -20,14 +20,14 @@
                 {
                     <div class="genre">
                         <h2>@item.Name</h2>
-                        <a asp-controller="Movies" asp-action="Index" asp-route-GenreId="@item.Id">Детальніше</a>
+                        <a asp-controller="Movies" asp-action="Index" asp-route-GenreId="@item.Id">Details</a>
                     </div>
                 }
             </div>
 
             <!-- Рекламний блок знизу -->
             <div class="bottom-advertisement">
-                <img src="~/Genres/images/реклама.jpg" alt="Реклама знизу" />
+                <img src="~/Genres/images/реклама.jpg" alt="Advertisement" />
                 <p>Тут може бути ваша реклама але Єва лохесса .</p>
             </div>
 
