@@ -27,7 +27,6 @@ namespace Movies.Controllers
                 .ThenInclude(s => s.Hall)
                 .Select(m => new MovieViewModel(m))
                 .ToList();
-            
             return View(movies);
         }
         [Authorize(Roles = "Admins")]
