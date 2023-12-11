@@ -14,7 +14,7 @@
 				Hall
 			</th>
 			<th>
-				Price
+				Price 
 			</th>
 			@if (Admin)
 			{
@@ -36,12 +36,12 @@
 					@item.Hall
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Price)
+					@item.Price UAH
 				</td>
 				@if (Admin)
 				{
 					<td>
-						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> |</span>
+						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> | </span>
 						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 					</td>
 				}

@@ -19,6 +19,14 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+
+    @if (User.IsInRole("Admins"))
+        {
+            <span>|</span>
+            <a asp-action="Edit" asp-route-id="@Model.Id?">Edit</a>
+            <span>|</span>
+            <a asp-action="Delete" asp-route-id="@Model.Id?">Delete</a>
+        }
 </div>
+<a href="c:\users\єва\source\repos\webdesign_courseworkkkkkkkkk\movies\views\technologies\details.cshtml">c:\users\єва\source\repos\webdesign_courseworkkkkkkkkk\movies\views\technologies\details.cshtml</a>
