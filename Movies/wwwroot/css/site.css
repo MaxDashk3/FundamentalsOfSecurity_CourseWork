@@ -90,7 +90,7 @@ dt{
 }
 
 input[type=radio].seat {
-    padding: 20px;
+    padding: min(3.5vw,15px);
     -webkit-appearance: none;
     outline: unset;
     background-color: lightgray;
