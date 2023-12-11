@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,34 +22,24 @@ namespace Movies.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if (_context.Movies != null)
-            {
-                var applicationDbContext = _context.Movies
+             var applicationDbContext = _context.Movies
                 .Include(m => m.Genre)
                 .Select(m => new MovieViewModel(m)).ToListAsync();
                 return View(await applicationDbContext);
-            }
-            else
-            {
-                return Problem("Entity set 'ApplicationDbContext.Movies'  is null.");
-            }
         }
-
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var movie = _context.Movies
-                .Include(m => m.Genre)
-                .Include(m => m.Sessions.OrderBy(s => s.TimeDate))
-                .ThenInclude(s => s.Hall)
-                .FirstOrDefault(x => x.Id == id);
-            if (movie == null)
-
-                return RedirectToAction("Index");
-
-            return View(new MovieViewModel(movie));
+            if (id != null)
+            {
+                var movie = await _context.Movies
+                    .Include(m => m.Genre)
+                    .Include(m => m.Sessions!.OrderBy(s => s.TimeDate))
+                    .ThenInclude(s => s.Hall)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                return View(new MovieViewModel(movie!));
+            }
+            return RedirectToAction("Index");
         }
-
-        // GET: Movies/Create
         public IActionResult Create()
         {
             ViewBag.Genres = _context.Genres.ToList();
@@ -60,6 +51,7 @@ namespace Movies.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
         {
             model.Poster = FileToBytes(Poster);
@@ -83,28 +75,21 @@ namespace Movies.Controllers
 
         }
 
-        // GET: Movies/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Movies == null)
+            if (id != null)
             {
-                return NotFound();
+                var movie = await _context.Movies
+                .FindAsync(id);
+                ViewBag.Genres = _context.Genres.ToList();
+                return View(new MovieViewModel(movie!));
             }
-
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            ViewBag.Genres = _context.Genres.ToList();
-            return View(new MovieViewModel(movie));
+            return RedirectToAction("Index");
         }
-
-        // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int id, MovieViewModel model, IFormFile Poster)
         {
             var movie = new Movie(model);
@@ -139,26 +124,19 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        // GET: Movies/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Movies == null)
+            if (id != null)
             {
-                return NotFound();
+                var movie = await _context.Movies
+                .FindAsync(id);
+                return View(new MovieViewModel(movie!));
             }
-
-            var movie = await _context.Movies
-                .Include(m => m.Genre)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(new MovieViewModel(movie));
+            return RedirectToAction("Index");
         }
 
-        // POST: Movies/Delete/5
+        [Authorize(Roles = "Admins")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

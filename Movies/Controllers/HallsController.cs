@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Models;
+using Movies.ViewModels;
 
 namespace Movies.Controllers
 {
@@ -22,30 +23,17 @@ namespace Movies.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if (_context.Halls != null)
-            {
-                return View(await _context.Halls.ToListAsync());
-            }
-            else
-            {
-                return Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
-            }
+            return View(await _context.Halls.ToListAsync());
         }
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Halls == null)
+            if(id != null)
             {
-                return NotFound();
+                 var hall = await _context.Halls
+                    .FindAsync(id);
+                 return View(hall);
             }
-
-            var hall = await _context.Halls
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
-            {
-                return NotFound();
-            }
-
-            return View(hall);
+            return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admins")]
         public IActionResult Create()
@@ -63,23 +51,19 @@ namespace Movies.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            return View(hall);
         }
 
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Halls == null)
+            if (id != null)
             {
-                return NotFound();
+                var hall = await _context.Halls
+                   .FindAsync(id);
+                return View(hall);
             }
-
-            var hall = await _context.Halls.FindAsync(id);
-            if (hall == null)
-            {
-                return NotFound();
-            }
-            return View(hall);
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
@@ -118,19 +102,13 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Halls == null)
+            if (id != null)
             {
-                return NotFound();
+                var hall = await _context.Halls
+                .FindAsync(id);
+                return View(hall);
             }
-
-            var hall = await _context.Halls
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
-            {
-                return NotFound();
-            }
-
-            return View(hall);
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
