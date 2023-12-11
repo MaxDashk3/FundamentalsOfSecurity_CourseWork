@@ -54,19 +54,15 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _db.Sessions == null)
+            if (id != null)
             {
-                return NotFound();
+                var Session = await _db.Sessions.Include(s => s.Hall).Include(s => s.Movie)
+                .FirstOrDefaultAsync(s => s.Id == id);
+                ViewBag.Movies = _db.Movies.ToList();
+                ViewBag.Halls = _db.Halls.ToList();
+                return View(new SessionViewModel(Session!));
             }
-
-            var session = await _db.Sessions.FindAsync(id);
-            if (session == null)
-            {
-                return NotFound();
-            }
-            ViewBag.Movies = _db.Movies.ToList();
-            ViewBag.Halls = _db.Halls.ToList();
-            return View(new SessionViewModel(session));
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
@@ -107,22 +103,13 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _db.Sessions == null)
+            if (id != null)
             {
-                return NotFound();
+                var Session = await _db.Sessions.Include(s => s.Hall).Include(s => s.Movie)
+                .FirstOrDefaultAsync(s => s.Id == id);
+                return View(new SessionViewModel(Session!));
             }
-
-            var session = await _db.Sessions
-                .Include(s => s.Hall)
-                .Include(s => s.Movie)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (session == null)
-            {
-                return NotFound();
-            }
-
-            var vmodel = new SessionViewModel(session); 
-            return View(vmodel);
+            return RedirectToAction("Index");
         }
 
         // POST: Sessions/Delete/5
@@ -147,23 +134,15 @@ namespace Movies.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _db.Sessions == null)
+            if (id != null)
             {
-                return NotFound();
+                var Session = await _db.Sessions.Include(s => s.Hall).Include(s => s.Movie)
+                .FirstOrDefaultAsync(s => s.Id == id);
+                return View(new SessionViewModel(Session!));
             }
-
-            var session = _db.Sessions
-                .Include(s => s.Hall)
-                .Include(s => s.Movie)
-                .FirstOrDefault(m => m.Id == id);
-            if (session == null)
-            {
-                return NotFound();
-            }
-
-            return View(session);
+            return RedirectToAction("Index");
         }
 
         private bool SessionExists(int id)

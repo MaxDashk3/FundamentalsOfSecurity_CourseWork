@@ -21,9 +21,8 @@ namespace Movies.Controllers
         {
             bool valid = !_context.Movies.Any(m => m.Title == Title);
             if (id != null)
-                if (_context.Movies.Find(id).Title == Title)
+                if (_context.Movies.Find(id)!.Title == Title)
                     valid = true;
-
             return valid;
         }
     }

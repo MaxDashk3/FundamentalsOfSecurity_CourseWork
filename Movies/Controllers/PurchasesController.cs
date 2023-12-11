@@ -29,7 +29,6 @@ namespace Movies.Controllers
         {
             var purchases = _context.Purchases
                 .Include(p => p.Tickets)
-                .Include("Tickets.Session")
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
                 .Include("Tickets.User")
@@ -43,7 +42,6 @@ namespace Movies.Controllers
         {
             var purchases = _context.Purchases
                 .Include(p => p.Tickets)
-                .Include("Tickets.Session")
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
                 .Include("Tickets.User")
@@ -58,23 +56,17 @@ namespace Movies.Controllers
         // GET: Purchases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Purchases == null)
+            if (id != null)
             {
-                return NotFound();
-            }
-
-            var purchase = await _context.Purchases
+                var purchase = await _context.Purchases
                 .Include(p => p.Tickets)
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
                 .Include("Tickets.User")
                 .FirstOrDefaultAsync(m => m.PurchaseId == id);
-            if (purchase == null)
-            {
-                return NotFound();
+                return View(new PurchaseViewModel(purchase!));
             }
-
-            return View(new PurchaseViewModel(purchase));
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
@@ -106,9 +98,9 @@ namespace Movies.Controllers
                     _context.Update(t);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("BuyResult", new {Person = User.Identity.Name});
+                return RedirectToAction("BuyResult", new {Person = User.Identity!.Name});
             }
-            return View();
+            return View(model);
         }
 
         public IActionResult BuyResult(string Person)
@@ -123,18 +115,14 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Purchases == null)
+            if (id != null)
             {
-                return NotFound();
+                var purchase = await _context.Purchases
+                .FindAsync(id);
+                ViewBag.UserId = _manager.GetUserId(User);
+                return View(new PurchaseViewModel(purchase!));
             }
-
-            var purchase = await _context.Purchases.FindAsync(id);
-            if (purchase == null)
-            {
-                return NotFound();
-            }
-            ViewBag.UserId = _manager.GetUserId(User);
-            return View(new PurchaseViewModel(purchase));
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
@@ -170,29 +158,20 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Purchases == null)
+            if (id != null)
             {
-                return NotFound();
+                var purchase = await _context.Purchases
+                .FindAsync(id);
+                return View(new PurchaseViewModel(purchase!));
             }
-
-            var purchase = await _context.Purchases
-                .FirstOrDefaultAsync(m => m.PurchaseId == id);
-            if (purchase == null)
-            {
-                return NotFound();
-            }
-
-            return View(new PurchaseViewModel(purchase));
+            return RedirectToAction("Index");
         }
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Purchases == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Purchases'  is null.");
-            }
             var purchase = await _context.Purchases.FindAsync(id);
             if (purchase != null)
             {
@@ -201,7 +180,6 @@ namespace Movies.Controllers
                 _context.Tickets.RemoveRange(ticketsToRemove);
                 _context.Purchases.Remove(purchase);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

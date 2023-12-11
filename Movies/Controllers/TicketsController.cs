@@ -24,24 +24,22 @@ namespace Movies.Controllers
             _manager = manager;
         }
 
-        [Authorize(Roles = "Admins")]
-        public IActionResult Create(int id)
+        [Authorize]
+        public IActionResult Create(int? id)
         {
-            var session = _context.Sessions
-                .Include(s => s.Movie)
-                .Include(s => s.Hall)
-                .Include(s => s.Tickets)
-                .FirstOrDefault(s => s.Id == id);
-
-            if (session != null)
+            if (id != null)
             {
-                var sModel = new SessionViewModel(session);
+                var session = _context.Sessions
+                    .Include(s => s.Movie)
+                    .Include(s => s.Hall)
+                    .Include(s => s.Tickets)
+                    .FirstOrDefault(s => s.Id == id);
+                var sModel = new SessionViewModel(session!);
                 var tickets = sModel.Tickets;
-                var takenseats = tickets.Select(t => new TicketViewModel(t))
+                var takenseats = tickets!.Select(t => new TicketViewModel(t))
                     .Select(t => t.Seat)
                     .ToList();
-
-                ViewBag.Hall = session.Hall;
+                ViewBag.Hall = session!.Hall;
                 ViewBag.Session = sModel;
                 ViewBag.TakenSeats = takenseats;
                 ViewBag.UserId = _manager.GetUserId(User);
@@ -50,7 +48,7 @@ namespace Movies.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [Authorize(Roles = "Admins")]
+        [Authorize]
         public IActionResult Create(TicketViewModel model)
         {
             model.SeatRow = Convert.ToInt16(model.Seat.Remove(model.Seat.IndexOf(' ')));
@@ -81,41 +79,25 @@ namespace Movies.Controllers
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Tickets == null)
+            if (id != null)
             {
-                return NotFound();
+                var ticket = await _context.Tickets.Include(t => t.Session)
+                .FirstOrDefaultAsync(t => t.Id == id);
+                return View(new TicketViewModel(ticket!));
             }
-
-            var ticket = await _context.Tickets
-                .Include(t => t.Session)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-
-            return View(ticket);
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Tickets == null)
+            if (id != null)
             {
-                return NotFound();
+                var ticket = await _context.Tickets.Include(t => t.Session.Movie)
+                .FirstOrDefaultAsync(t => t.Id == id);
+                return View(new TicketViewModel(ticket!));
             }
-
-            var ticket = await _context.Tickets
-                .Include(t => t.Session)
-                .ThenInclude(s => s.Movie)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-            var model = new TicketViewModel(ticket);
-
-            return View(model);
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
@@ -145,8 +127,8 @@ namespace Movies.Controllers
                 .Include("Tickets.Session")
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
-                .FirstOrDefault(u => u.UserName == User.Identity.Name)
-                .Tickets
+                .FirstOrDefault(u => u.UserName == User.Identity!.Name)!
+                .Tickets!
                 .Where(t => t.PurchaseId == null)
                 .Select(t => new TicketViewModel(t))
                 .ToList();

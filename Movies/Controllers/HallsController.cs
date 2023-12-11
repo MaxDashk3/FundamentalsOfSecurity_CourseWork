@@ -36,17 +36,12 @@ namespace Movies.Controllers
         }
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Halls == null)
-            {
-                return NotFound();
-            }
-
             var hall = await _context.Halls
                 .Include(h => h.Technologies)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hall == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
 
             return View(new HallViewModel(hall));
@@ -72,17 +67,12 @@ namespace Movies.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Technologies = _context.Technologies.ToList();
-            return View();
+            return View(hall);
         }
 
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Halls == null)
-            {
-                return NotFound();
-            }
-
             var hall = await _context.Halls.FindAsync(id);
             if (hall == null)
             {
@@ -142,17 +132,12 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Halls == null)
-            {
-                return NotFound();
-            }
-
             var hall = await _context.Halls
                 .Include(h => h.Technologies)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hall == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
 
             return View(new HallViewModel(hall));
