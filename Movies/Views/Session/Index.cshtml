@@ -1,52 +1,76 @@
+@using Movies.ViewModels;
 @model List<MovieViewModel>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyJcQ1sJLYt3OgCLK6g/pT12uIwx2I3WjT" crossorigin="anonymous">
 
 <style>
+    <style >
     /* Стилі для горизонтальних карточок */
     .movie-card {
         border: 1px solid #ccc;
-        border-radius: 10px;
+        border-radius: 5px; /* Зменшені кути */
         overflow: hidden;
-        margin-bottom: 15px;
-        width: 150px; /* Змініть ширину за потребою */
+        margin-bottom: 5px;
     }
-
-    .movie-photo {
-        max-height: 100px; /* Змініть висоту за потребою */
-        object-fit: cover;
-        border-radius: 10px 0 0 10px;
-        width: 100%;
-    }
-
 
     .movie-content {
-        padding: 8px; /* Зменшуємо внутрішні відступи */
+        padding: 10px; /* Зменшений відступ */
     }
 
     .movie-title {
-        font-size: 60px; /* Змініть розмір шрифту за потребою */
+        font-size: 56px;
         margin-bottom: 8px;
+        align-items: flex-start;
     }
-
 
     .sessions-container {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        margin-top: 10px; /* Доданий верхній відступ */
     }
 
     .session {
         border: 1px solid #ddd;
         border-radius: 5px;
-        padding: 3px; /* Зменшуємо внутрішні відступи */
-        margin: 2px; /* Зменшуємо зовнішні відступи */
-        width: 50px; /* Зменшуємо ширину сеансу */
+        padding: 6px;
+        margin: 4px;
+        width: 60px;
         text-align: center;
     }
 
-   
+    .movie-photo {
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 15px 0 0 15px;
+        width: 100%;
+    }
+
+    /* Оновлений стиль для таблиці */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+       
+        padding: 8px;
+        text-align: left;
+    }
+
+
+    /* Збільшений текст для "Available sessions" */
+    .available-sessions-text {
+        font-size: 24px;
+    }
+
+    /* Збереження нижньої границі для всіх елементів, крім кнопки "Book a seat" */
+    .book-seat-button {
+        border-bottom: none;
+    }
 </style>
+
+
 
 @{
     ViewData["Title"] = "Sessions";
@@ -82,7 +106,7 @@
 
                                 <!-- Сеанси -->
                                 <div class="sessions-container">
-                                    <h6 class="card-subtitle mb-2 text-muted">Available sessions:</h6>
+                                    <h6 class="available-sessions-text">Available sessions:</h6>
                                     @{
                                         await Html.RenderPartialAsync("~/Views/Shared/SessionsTable.cshtml", movie.Sessions);
                                     }
