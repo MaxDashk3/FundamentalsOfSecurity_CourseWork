@@ -19,6 +19,11 @@
                     <div class="genre">
                         <h2>@item.Name</h2>
                         <a asp-controller="Genres" asp-action="Details" asp-route-Id="@item.Id">Details</a>
+                        @if (User.IsInRole("Admins"))
+                        {
+                            <a asp-controller="Genres" asp-action="Edit" asp-route-Id="@item.Id">Edit</a>
+                            <a asp-controller="Genres" asp-action="Delete" asp-route-Id="@item.Id">Delete</a>
+                        }
                     </div>
                 }
             </div>

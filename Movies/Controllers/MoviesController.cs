@@ -90,13 +90,16 @@ namespace Movies.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admins")]
-        public async Task<IActionResult> Edit(int id, MovieViewModel model, IFormFile Poster)
+        public async Task<IActionResult> Edit(int id, MovieViewModel model, IFormFile NewPoster)
         {
             var movie = new Movie(model);
-            model.Poster = FileToBytes(Poster);
+            if (NewPoster != null)
+                movie.Poster = FileToBytes(NewPoster);
+            else movie.Poster = _context.Movies.Find(movie.Id).Poster;
+
             ModelState.Clear();
 
-            if (TryValidateModel(model) && new DataController(_context).MoviesValidation(model.Title))
+            if (TryValidateModel(movie) && new DataController(_context).MoviesValidation(movie.Title))
             {
                 if (id != movie.Id)
                 {
@@ -104,7 +107,8 @@ namespace Movies.Controllers
                 }
                 try
                 {
-                    _context.Update(movie);
+                    _context.ChangeTracker.Clear();
+                    _context.Movies.Update(movie);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

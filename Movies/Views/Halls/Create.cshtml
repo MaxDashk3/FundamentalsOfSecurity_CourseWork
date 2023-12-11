@@ -23,7 +23,7 @@
                 <span asp-validation-for="Rows" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SeatsPerRow" class="control-label"></label>
+                <label asp-for="SeatsPerRow" class="control-label">Seats per row</label>
                 <input asp-for="SeatsPerRow" class="form-control" />
                 <span asp-validation-for="SeatsPerRow" class="text-danger"></span>
             </div>
@@ -31,7 +31,7 @@
                 @for (int i = 0; i < ViewBag.Technologies.Count; i++)
                 {
                     <input type="checkbox" id="TechId @i" name="TechId" value="@ViewBag.Technologies[i].Id" />
-                    <label for="TechId @i">@ViewBag.Technologies[i].Name</label>
+                    <label for="TechId @i">@ViewBag.Technologies[i].Name</label><br />
                 }
             </div>
             <div class="form-group">
