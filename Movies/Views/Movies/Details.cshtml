@@ -27,10 +27,21 @@
         <img style="padding: 3vw; height:100%" class="col-5" src="@Url.Action("ShowImage", "Movies", new { id = Model.Id })" alt="Movie Photo" />
 	</div>
         
-    <div>
+
     <h4>Availible sessions:</h4>
     @{
         await Html.RenderPartialAsync("SessionsTable", Model.Sessions);
     }
     </div>
-</div>
+
+    @if (User.IsInRole("Admins"))
+    {
+        <td>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a><span> | </span>
+            <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a>
+        </td>
+    }
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+

@@ -20,7 +20,15 @@
     }
 
 </div>
+
+@if(User.IsInRole("Admins"))
+{
+    <td>
+
+   <a asp-action="Edit" asp-route-id="@Model?.PurchaseId">Edit</a><span> | </span>
+   <a asp-action="Delete" asp-route-id="@Model?.PurchaseId">Delete</a>
+    </td>
+}
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.PurchaseId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
