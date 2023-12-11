@@ -26,7 +26,12 @@
 
                                 <!-- Жанр та інша інформація про фільм -->
                                 <p class="card-text mb-0 text-left">Genre: @item.Genre</p>
-                                <p class="card-text text-left">Available sessions: [інформація про сеанси]</p>
+                                <details>
+                                    <summary>Description</summary>
+                                    <p class="card-text text-left">@item.Description</p>
+
+                                    </details>
+
                             </div>
                         </div>
                     </div>
@@ -34,8 +39,9 @@
 
                 <!-- Модальне вікно для кожного фільму -->
                 <div class="modal fade" id="myModal_@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <!-- Залиште залишок коду незмінним -->
+               
                 </div>
+                
             </div>
         }
     </div>

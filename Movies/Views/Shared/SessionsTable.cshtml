@@ -1,53 +1,56 @@
 @model List<Movies.ViewModels.SessionViewModel>
 
 @{
-    bool Admin = User.IsInRole("Admins");
+	bool Admin = User.IsInRole("Admins");
 }
 
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                Time and Date
-            </th>
-            <th>
-                Hall
-            </th>
-            <th>
-                Price
-            </th>
-
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr class="@(item.TimeDate < DateTime.Now? "unav_session" : "" )">
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeDate)
-                </td>
-                <td>
-                    @item.Hall
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    @if(Admin){
-                        <span>|</span>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> |</span>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    }
-                </td>
-                <td>
-                    <a href="@(item.TimeDate < DateTime.Now ? "" : $"/Tickets/Create/{item.Id}")">
-                        <button @(item.TimeDate < DateTime.Now ? "disabled" : "")>Book a seat</button>
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				Time and Date
+			</th>
+			<th>
+				Hall
+			</th>
+			<th>
+				Price
+			</th>
+			@if (Admin)
+			{
+				<th>
+				</th>
+			}
+			<th>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr class="@(item.TimeDate < DateTime.Now? "unav_session" : "" )">
+				<td>
+					@Html.DisplayFor(modelItem => item.TimeDate)
+				</td>
+				<td>
+					@item.Hall
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Price)
+				</td>
+				@if (Admin)
+				{
+					<td>
+						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> |</span>
+						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</td>
+				}
+				<td>
+					<a href="@(item.TimeDate < DateTime.Now ? "" : $"/Tickets/Create/{item.Id}")">
+						<button @(item.TimeDate < DateTime.Now ? "disabled" : "")>Book a seat</button>
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
