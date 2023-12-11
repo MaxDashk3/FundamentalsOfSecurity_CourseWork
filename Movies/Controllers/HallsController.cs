@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Models;
+using Movies.ViewModels;
 
 namespace Movies.Controllers
 {
@@ -24,7 +25,9 @@ namespace Movies.Controllers
         {
             if (_context.Halls != null)
             {
-                return View(await _context.Halls.ToListAsync());
+                return View(await _context.Halls.Include(h => h.Technologies)
+                    .Select(h => new HallViewModel(h))
+                    .ToListAsync());
             }
             else
             {
@@ -39,30 +42,36 @@ namespace Movies.Controllers
             }
 
             var hall = await _context.Halls
+                .Include(h => h.Technologies)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hall == null)
             {
                 return NotFound();
             }
 
-            return View(hall);
+            return View(new HallViewModel(hall));
         }
         [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
+            ViewBag.Technologies = _context.Technologies.ToList();
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admins")]
-        public async Task<IActionResult> Create([Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
+        public async Task<IActionResult> Create(HallViewModel model, int[] TechId)
         {
+            var hall = new Hall(model);
+            hall.Technologies = TechId.Select(t => _context.Technologies.Find(t)).ToList();
+
             if (ModelState.IsValid)
             {
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Technologies = _context.Technologies.ToList();
             return View();
         }
 
@@ -79,14 +88,19 @@ namespace Movies.Controllers
             {
                 return NotFound();
             }
-            return View(hall);
+            ViewBag.Technologies = _context.Technologies.ToList();
+            ViewBag.SelectedTech = _context.Halls.Include(h => h.Technologies)
+                .FirstOrDefault(h => h.Id == id)
+                .Technologies.Select(t => t.Id).ToList();
+            return View(new HallViewModel(hall));
         }
 
         [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
+        public async Task<IActionResult> Edit(int id, HallViewModel model, int[] TechId)
         {
+            var hall = new Hall(model);
             if (ModelState.IsValid)
             {
                 if (id != hall.Id)
@@ -96,7 +110,16 @@ namespace Movies.Controllers
 
                 try
                 {
-                    _context.Update(hall);
+                    ICollection<Technology> technologies = new HashSet<Technology>();
+                    foreach (int i in TechId)
+                    {
+                        technologies.Add(_context.Technologies.Find(i));
+                    }
+                    var HallToUpd = _context.Halls.Include(h => h.Technologies)
+                        .FirstOrDefault(h => h.Id == id);
+                    HallToUpd.Name = hall.Name;
+                    HallToUpd.Technologies = technologies;
+                    _context.Update(HallToUpd);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -112,6 +135,7 @@ namespace Movies.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Technologies = _context.Technologies.ToList();
             return View(hall) ;
         }
 
@@ -124,13 +148,14 @@ namespace Movies.Controllers
             }
 
             var hall = await _context.Halls
+                .Include(h => h.Technologies)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hall == null)
             {
                 return NotFound();
             }
 
-            return View(hall);
+            return View(new HallViewModel(hall));
         }
 
         [Authorize(Roles = "Admins")]

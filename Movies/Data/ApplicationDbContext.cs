@@ -16,6 +16,7 @@ namespace Movies.Data
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<Technology> Technologies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -55,6 +56,10 @@ namespace Movies.Data
                 .HasOne(t => t.Purchase)
                 .WithMany(p => p.Tickets)
                 .HasForeignKey(t => t.PurchaseId);
+
+            builder.Entity<Hall>()
+                .HasMany(h => h.Technologies)
+                .WithMany(t => t.Halls);
         }
     }
 }

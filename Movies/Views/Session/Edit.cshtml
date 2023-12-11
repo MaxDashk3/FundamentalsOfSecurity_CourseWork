@@ -18,7 +18,7 @@
                 <select asp-for="HallId" class="form-control">
                     @foreach (Hall hall in ViewBag.Halls)
                     {
-                        <option value="@hall.Id">@hall.Number</option>
+                        <option value="@hall.Id">@hall.Name</option>
                     }
                 </select>
                 <span asp-validation-for="HallId" class="text-danger"></span>

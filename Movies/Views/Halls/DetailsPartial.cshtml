@@ -1,11 +1,11 @@
-﻿@model Movies.Models.Hall
+﻿@model Movies.ViewModels.HallViewModel
 
 <dl class="row">
     <dt class="col-sm-2">
-        @Html.DisplayNameFor(model => model.Number)
+        @Html.DisplayNameFor(model => model.Name)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Number)
+        @Html.DisplayFor(model => model.Name)
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Rows)
@@ -18,5 +18,11 @@
     </dt>
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.SeatsPerRow)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Technologies)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.TechnologiesString)
     </dd>
 </dl>
