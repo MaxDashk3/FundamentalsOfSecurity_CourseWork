@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -78,7 +78,10 @@ label {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5, 
+dd,
+dt{
     color: white
 }
 
@@ -290,4 +293,21 @@ th {
 
 .flex {
     display: flex
+}
+
+summary {
+    color:white;
+    display: block;
+}
+
+    /* Create a new custom triangle on the right side */
+    summary::after {
+        margin-left: 1ch;
+        display: inline-block;
+        content: '➜';
+        transition: 0.2s;
+    }
+
+details[open] > summary::after {
+    transform: rotate(90deg);
 }
