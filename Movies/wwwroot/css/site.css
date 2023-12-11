@@ -127,7 +127,6 @@ th {
 }
 
 .genre {
-
     padding: 10px;
     margin-bottom: 28px;
     text-align: center;
@@ -211,12 +210,10 @@ th {
     100% {
         transform: translateY(0);
     }
-
 }
 
 .moving-header {
     animation: moveHeader 2s infinite;
-
 }
 
 
@@ -272,7 +269,6 @@ th {
     position: absolute;
     height: 100%;
     width: 100%;
-
     background-color: #00000075;
 }
 

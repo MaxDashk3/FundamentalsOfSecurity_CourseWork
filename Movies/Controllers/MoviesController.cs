@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Humanizer.Localisation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,33 +19,21 @@ namespace Movies.Controllers
         {
             _context = context;
         }
-
-        // GET: Movies
-        public async Task<IActionResult> Index(int? GenreId = null, int? MovieId = null)
+        public async Task<IActionResult> Index()
         {
-            if (GenreId != null)
-            {
-                var applicationDbContext = _context.Movies.
-                 Where(x => x.GenreId == GenreId).Include(m => m.Genre)
-                .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(await applicationDbContext);
-            }
-            else if (MovieId != null)
+            if (_context.Movies != null)
             {
                 var applicationDbContext = _context.Movies
-                    .Where(x => x.Id == MovieId).Include(m => m.Genre)
-                    .Select(m => new MovieViewModel(m)).ToListAsync();
+                .Include(m => m.Genre)
+                .Select(m => new MovieViewModel(m)).ToListAsync();
                 return View(await applicationDbContext);
             }
             else
             {
-                var applicationDbContext = _context.Movies.Include(m => m.Genre)
-                    .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(await applicationDbContext);
+                return Problem("Entity set 'ApplicationDbContext.Movies'  is null.");
             }
         }
 
-        // GET: Movies/Details/5
         public IActionResult Details(int id)
         {
             var movie = _context.Movies
@@ -63,14 +48,16 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        [Authorize(Roles = "Admins")]
+        // GET: Movies/Create
         public IActionResult Create()
         {
             ViewBag.Genres = _context.Genres.ToList();
             return View();
         }
 
-        [Authorize(Roles = "Admins")]
+        // POST: Movies/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
@@ -91,12 +78,12 @@ namespace Movies.Controllers
         public byte[] FileToBytes(IFormFile file)
         {
             BinaryReader reader = new BinaryReader(file.OpenReadStream());
-            byte [] imageBytes = reader.ReadBytes((int)file.Length);
+            byte[] imageBytes = reader.ReadBytes((int)file.Length);
             return imageBytes;
 
         }
 
-        [Authorize(Roles = "Admins")]
+        // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Movies == null)
@@ -113,7 +100,9 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        [Authorize(Roles = "Admins")]
+        // POST: Movies/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MovieViewModel model, IFormFile Poster)
@@ -150,7 +139,7 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        [Authorize(Roles = "Admins")]
+        // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Movies == null)
@@ -169,7 +158,7 @@ namespace Movies.Controllers
             return View(new MovieViewModel(movie));
         }
 
-        [Authorize(Roles = "Admins")]
+        // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -208,3 +197,4 @@ namespace Movies.Controllers
         }
     }
 }
+
