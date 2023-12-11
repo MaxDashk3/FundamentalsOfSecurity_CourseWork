@@ -30,11 +30,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+            
                 <td>
                     <a href="@(item.TimeDate < DateTime.Now ? "" : $"/Tickets/Create/{item.Id}")">
                         <button @(item.TimeDate < DateTime.Now ? "disabled" : "")>Book a seat</button>
