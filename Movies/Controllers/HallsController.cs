@@ -75,7 +75,8 @@ namespace Movies.Controllers
                     ViewBag.Technologies = _context.Technologies.ToList();
                     var selectedTech = _context.Halls.Include(h => h.Technologies)
                         .FirstOrDefault(h => h.Id == id);
-                    if (selectedTech != null) { 
+                    if (selectedTech != null)
+                    {
                         ViewBag.SelectedTech = selectedTech.Technologies?.Select(t => t.Id).ToList();
                     }
                     return View(new HallViewModel(hall));
@@ -119,7 +120,7 @@ namespace Movies.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Technologies = _context.Technologies.ToList();
-            return View(hall) ;
+            return View(hall);
         }
 
         [Authorize(Roles = "Admins")]

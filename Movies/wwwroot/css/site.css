@@ -327,3 +327,9 @@ summary {
 details[open] > summary::after {
     transform: rotate(90deg);
 }
+
+@media (min-width: 2000px) {
+    .scroll-container {
+        max-width: 1200px; /* Збільшено максимальний розмір на великих екранах */
+    }
+}

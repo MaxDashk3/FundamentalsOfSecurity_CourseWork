@@ -1,9 +1,77 @@
-﻿@{
+﻿@using Movies.ViewModels;
+@model List<MovieViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome!</h1>
-    <p>View availible sessions here!</p>
-    <a href="/Session/Index"><button>Sessions</button></a>
+<style>
+    .index-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .scroll-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        max-width: 2000px;
+        padding: 10px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .row-container {
+        display: inline-block;
+        white-space: nowrap;
+        margin-bottom: 10px;
+    }
+
+    .full-width-img {
+        width: 300px;
+        height: 450px;
+        object-fit: cover;
+        display: inline-block;
+        margin: 0 5px;
+        transition: transform 0.3s;
+    }
+
+    .full-width-img:hover {
+        transform: scale(1.1);
+    }
+
+    .big-button {
+        font-size: 2em;
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+
+    .index-container {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="scroll-container">
+        <div class="row-container">
+            @foreach (var movie in Model)
+            {
+                <a asp-controller="Movies" asp-action="Details" asp-route-Id="@movie.Id">
+                    <img src="@Url.Action("ShowImage", "Movies", new { id = movie.Id })" class="full-width-img" alt="Movie Photo">
+                </a>
+            }
+        </div>
+    </div>
 </div>
+
+<div class="text-center">
+    <a href="/Session/Index"><button class="big-button">Sessions</button></a>
+</div>
+
+
+

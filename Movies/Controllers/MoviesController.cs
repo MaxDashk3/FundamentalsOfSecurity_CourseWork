@@ -22,10 +22,10 @@ namespace Movies.Controllers
         }
         public async Task<IActionResult> Index()
         {
-             var applicationDbContext = _context.Movies
-                .Include(m => m.Genre)
-                .Select(m => new MovieViewModel(m)).ToListAsync();
-                return View(await applicationDbContext);
+            var applicationDbContext = _context.Movies
+               .Include(m => m.Genre)
+               .Select(m => new MovieViewModel(m)).ToListAsync();
+            return View(await applicationDbContext);
         }
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,7 +48,7 @@ namespace Movies.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="Admins")]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
         {
             model.Poster = FileToBytes(Poster);
@@ -92,7 +92,8 @@ namespace Movies.Controllers
             var movie = new Movie(model);
             if (NewPoster != null)
                 movie.Poster = FileToBytes(NewPoster);
-            else {
+            else
+            {
                 var moviefind = _context.Movies.Find(movie.Id);
                 if (moviefind != null) movie.Poster = moviefind.Poster;
             }
@@ -143,7 +144,7 @@ namespace Movies.Controllers
             var movie = _context.Movies.Find(id);
             if (movie != null)
             {
-                return File(movie.Poster, "image/jpeg"); 
+                return File(movie.Poster, "image/jpeg");
             }
             else
             {
@@ -152,4 +153,5 @@ namespace Movies.Controllers
         }
     }
 }
+
 
