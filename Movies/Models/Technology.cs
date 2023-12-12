@@ -7,7 +7,7 @@ namespace Movies.Models
 	{
         public int Id { get; set; }
 		[Required]
-		[Display(Prompt = "Enter name here")]
+		[Display(Prompt = "Enter technology here", Name = "Technology name")]
 		public string Name { get; set; }
 
 		public IEnumerable<Hall>? Halls { get; set; }
