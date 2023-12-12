@@ -54,11 +54,16 @@ namespace Movies.Controllers
         {
             var hall = new Hall(model);
             hall.Technologies = TechId.Select(t => _context.Technologies.Find(t)).ToList()!;
-            if (ModelState.IsValid && new DataController(_context).HallsValidation(hall.Name))
+            bool remote = new DataController(_context).HallsValidation(hall.Name);
+            if (ModelState.IsValid && remote)
             {
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            if (!remote)
+            {
+                ModelState.AddModelError("Name", "Hall already exists");
             }
             ViewBag.Technologies = await _context.Technologies.ToListAsync();
             return View(model);
@@ -90,7 +95,8 @@ namespace Movies.Controllers
         public async Task<IActionResult> Edit(int id, HallViewModel model, int[] TechId)
         {
             var hall = new Hall(model);
-            if (ModelState.IsValid && new DataController(_context).HallsValidation(hall.Name, hall.Id))
+            bool remote = new DataController(_context).HallsValidation(hall.Name, hall.Id);
+            if (ModelState.IsValid && remote)
             {
                 if (id != hall.Id)
                 {
@@ -118,8 +124,12 @@ namespace Movies.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            if (!remote)
+            {
+                ModelState.AddModelError("Name", "Hall already exists");
+            }
             ViewBag.Technologies = _context.Technologies.ToList();
-            return View(hall) ;
+            return View(model) ;
         }
 
         [Authorize(Roles = "Admins")]
