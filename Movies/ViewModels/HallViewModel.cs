@@ -1,4 +1,5 @@
-﻿using Movies.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Movies.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Movies.ViewModels
@@ -7,6 +8,7 @@ namespace Movies.ViewModels
 	{
 		public int Id { get; set; }
 		[Required(ErrorMessage = "This field is required")]
+		[Remote(action: "HallsValidation", controller: "Data", ErrorMessage = "The hall already exists!")]
 		public string Name { get; set; }
 		[Required(ErrorMessage = "This field is required")]
 		[Range(5, 30, ErrorMessage = "There has to be from 5 to 30 rows")]

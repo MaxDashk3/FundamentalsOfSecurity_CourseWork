@@ -44,7 +44,6 @@ namespace Movies.Controllers
             {
                 _db.Sessions.Add(new Session(sessionViewModel));
                 _db.SaveChanges();
-
                 return RedirectToAction("Index");
             }
             ViewBag.Movies = _db.Movies.ToList();
@@ -73,27 +72,13 @@ namespace Movies.Controllers
             var session = new Session(vmodel);
             if (ModelState.IsValid)
             {
-                if (id != session.Id)
-                {
-                    return NotFound();
-                }
-                try
+                if (id == session.Id)
                 {
                     _db.Update(session);
                     await _db.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SessionExists(session.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
             ViewBag.Movies = _db.Movies.ToList();
             ViewBag.Halls = _db.Halls.ToList();
@@ -118,19 +103,14 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_db.Sessions == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Sessions'  is null.");
-            }
             var session = await _db.Sessions.FindAsync(id);
             if (session != null)
             {
                 _db.Sessions.Remove(session);
                 var ticketsToRemove = _db.Tickets.Where(t => t.SessionId == session.Id);
                 _db.Tickets.RemoveRange(ticketsToRemove);
+                await _db.SaveChangesAsync();
             }
-
-            await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -144,11 +124,8 @@ namespace Movies.Controllers
             }
             return RedirectToAction("Index");
         }
-
-        private bool SessionExists(int id)
-        {
-            return (_db.Sessions?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }
+
+
 

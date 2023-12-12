@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="HallId" class="control-label"></label>
+                <label asp-for="HallId" class="control-label">Hall</label>
                 <select asp-for="HallId" class="form-control">
                     @foreach (Hall hall in ViewBag.Halls)
                     {
@@ -24,7 +24,7 @@
                 <span asp-validation-for="HallId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MovieId" class="control-label"></label>
+                <label asp-for="MovieId" class="control-label">Movie</label>
                 <select asp-for="MovieId" class="form-control">
                     @foreach (Movie movie in ViewBag.Movies)
                     {
@@ -34,12 +34,12 @@
                 <span asp-validation-for="MovieId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TimeDate" class="control-label"></label>
+                <label asp-for="TimeDate" class="control-label">Time and date</label>
                 <input asp-for="TimeDate" class="form-control" />
                 <span asp-validation-for="TimeDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
+                <label asp-for="Price" class="control-label">Price in UAH</label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>

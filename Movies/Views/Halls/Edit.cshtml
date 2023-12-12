@@ -24,7 +24,7 @@
                 <span asp-validation-for="Rows" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SeatsPerRow" class="control-label"></label>
+                <label asp-for="SeatsPerRow" class="control-label">Seats per row</label>
                 <input asp-for="SeatsPerRow" class="form-control" />
                 <span asp-validation-for="SeatsPerRow" class="text-danger"></span>
             </div>
@@ -32,7 +32,7 @@
                 @foreach (var t in ViewBag.Technologies)
                 {
                     <input @(ViewBag.SelectedTech.Contains(t.Id) ? "checked" : "") type="checkbox" id="TechId @t.Id" name="TechId" value="@t.Id" />
-                    <label for="TechId @t.Id">@t.Name</label>
+                    <label for="TechId @t.Id">@t.Name</label><br>
                 }
             </div>
             <div class="form-group">

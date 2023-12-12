@@ -50,7 +50,10 @@ namespace Movies.Controllers
             {
                 var genre = await _context.Genres.Include(g => g.Movies)
                 .FirstOrDefaultAsync(m => m.Id == id);
-                return View(new GenreViewModel(genre!));
+                if (genre != null)
+                {
+                    return View(new GenreViewModel(genre));
+                }
             }
             return RedirectToAction("Index");
         }
@@ -61,7 +64,8 @@ namespace Movies.Controllers
             {
                 var genre = await _context.Genres
                 .FindAsync(id);
-                return View(new GenreViewModel(genre!));
+                if(genre != null)
+                return View(new GenreViewModel(genre));
             }
             return RedirectToAction("Index");
         }
@@ -72,9 +76,9 @@ namespace Movies.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Update(new Genre(genreView));
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                 _context.Update(new Genre(genreView));
+                 await _context.SaveChangesAsync();
+                 return RedirectToAction(nameof(Index));
             }
             return View(genreView);
         }
@@ -85,7 +89,8 @@ namespace Movies.Controllers
             {
                 var genre = await _context.Genres
                 .FindAsync(id);
-                return View(new GenreViewModel(genre!));
+                if(genre != null)
+                return View(new GenreViewModel(genre));
             }
             return RedirectToAction("Index");
         }
@@ -94,18 +99,13 @@ namespace Movies.Controllers
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var genre = await _context.Genres.FindAsync(id);
+            if (genre != null)
             {
-                _context.Remove(await _context.Genres.FindAsync(id));
+                _context.Remove(genre);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(id);
-        }
-
-        private bool GenreExists(int id)
-        {
-            return (_context.Genres?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
