@@ -46,9 +46,6 @@ namespace Movies.Controllers
             return View();
         }
 
-        // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="Admins")]
@@ -95,33 +92,20 @@ namespace Movies.Controllers
             var movie = new Movie(model);
             if (NewPoster != null)
                 movie.Poster = FileToBytes(NewPoster);
-            else movie.Poster = _context.Movies.Find(movie.Id).Poster;
-
+            else {
+                var moviefind = _context.Movies.Find(movie.Id);
+                if (moviefind != null) movie.Poster = moviefind.Poster;
+            }
             ModelState.Clear();
-
             if (TryValidateModel(movie) && new DataController(_context).MoviesValidation(movie.Title))
             {
                 if (id != movie.Id)
                 {
                     return NotFound();
                 }
-                try
-                {
-                    _context.ChangeTracker.Clear();
-                    _context.Movies.Update(movie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(movie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.ChangeTracker.Clear();
+                _context.Movies.Update(movie);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Genres = _context.Genres.ToList();
@@ -145,17 +129,12 @@ namespace Movies.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Movies == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Movies'  is null.");
-            }
             var movie = await _context.Movies.FindAsync(id);
             if (movie != null)
             {
                 _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -164,18 +143,12 @@ namespace Movies.Controllers
             var movie = _context.Movies.Find(id);
             if (movie != null)
             {
-                return File(movie.Poster, "image/jpeg"); // You can set the appropriate content type.
+                return File(movie.Poster, "image/jpeg"); 
             }
             else
             {
                 return Content("Image not found");
             }
-        }
-
-
-        private bool MovieExists(int id)
-        {
-            return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

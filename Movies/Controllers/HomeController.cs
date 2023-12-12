@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Models;
+using Movies.ViewModels;
 using System.Diagnostics;
 
 namespace Movies.Controllers
@@ -16,9 +18,12 @@ namespace Movies.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var applicationDbContext = _db.Movies
+               .Include(m => m.Genre)
+               .Select(m => new MovieViewModel(m)).ToListAsync();
+            return View(await applicationDbContext);
         }
 
         public IActionResult Privacy()

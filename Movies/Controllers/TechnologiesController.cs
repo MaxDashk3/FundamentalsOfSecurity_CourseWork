@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,6 @@ namespace Movies.Controllers
             _context = context;
         }
 
-        // GET: Technologies
         public async Task<IActionResult> Index()
         {
               return _context.Technologies != null ? 
@@ -27,33 +27,25 @@ namespace Movies.Controllers
                           Problem("Entity set 'ApplicationDbContext.Technologies'  is null.");
         }
 
-        // GET: Technologies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Technologies == null)
+            if (id != null)
             {
-                return NotFound();
+                var technology = await _context.Technologies
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (technology != null)
+                {
+                    return View(technology);
+                }
             }
-
-            var technology = await _context.Technologies
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (technology == null)
-            {
-                return NotFound();
-            }
-
-            return View(technology);
+            return RedirectToAction("Index");
         }
-
-        // GET: Technologies/Create
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Technologies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Technology technology)
@@ -66,98 +58,62 @@ namespace Movies.Controllers
             }
             return View(technology);
         }
-
-        // GET: Technologies/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Technologies == null)
+            if (id != null)
             {
-                return NotFound();
+                var technology = await _context.Technologies.FindAsync(id);
+                if (technology != null)
+                {
+                    return View(technology);
+                }
             }
-
-            var technology = await _context.Technologies.FindAsync(id);
-            if (technology == null)
-            {
-                return NotFound();
-            }
-            return View(technology);
+            return RedirectToAction(nameof(Index)); 
         }
-
-        // POST: Technologies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Technology technology)
         {
-            if (id != technology.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                if (id == technology.Id)
                 {
                     _context.Update(technology);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TechnologyExists(technology.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
             return View(technology);
         }
-
-        // GET: Technologies/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Technologies == null)
+            if (id != null)
             {
-                return NotFound();
-            }
-
-            var technology = await _context.Technologies
+                var technology = await _context.Technologies
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (technology == null)
-            {
-                return NotFound();
+                if (technology == null)
+                {
+                    return View(technology);
+                }
             }
-
-            return View(technology);
+            return RedirectToAction("Index");
         }
-
-        // POST: Technologies/Delete/5
+        [Authorize(Roles = "Admins")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Technologies == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Technologies'  is null.");
-            }
             var technology = await _context.Technologies.FindAsync(id);
             if (technology != null)
             {
                 _context.Technologies.Remove(technology);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TechnologyExists(int id)
-        {
-          return (_context.Technologies?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

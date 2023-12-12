@@ -54,10 +54,8 @@ namespace Movies.Controllers
             model.SeatRow = Convert.ToInt16(model.Seat.Remove(model.Seat.IndexOf(' ')));
             model.SeatNum = Convert.ToInt16(model.Seat.Remove(0 , model.Seat.IndexOf(' ')));
             var ticket = new Ticket(model);
-
             _context.Tickets.Add(ticket);
             _context.SaveChanges();
-
             return RedirectToAction("Index","Session");
         }
 
@@ -72,11 +70,9 @@ namespace Movies.Controllers
                 .Include(t => t.User)
                 .Select(t => new TicketViewModel(t))
                 .ToList();
-
             return View(tickets);
         }
 
-        // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id != null)
@@ -105,17 +101,12 @@ namespace Movies.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Tickets == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Tickets'  is null.");
-            }
             var ticket = await _context.Tickets.FindAsync(id);
             if (ticket != null)
             {
                 _context.Tickets.Remove(ticket);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -132,13 +123,7 @@ namespace Movies.Controllers
                 .Where(t => t.PurchaseId == null)
                 .Select(t => new TicketViewModel(t))
                 .ToList();
-
             return View(tickets);
-        }
-
-        private bool TicketExists(int id)
-        {
-          return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

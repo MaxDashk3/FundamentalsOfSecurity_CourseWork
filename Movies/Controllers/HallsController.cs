@@ -23,28 +23,23 @@ namespace Movies.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if (_context.Halls != null)
-            {
-                return View(await _context.Halls.Include(h => h.Technologies)
+            return View(await _context.Halls.Include(h => h.Technologies)
                     .Select(h => new HallViewModel(h))
                     .ToListAsync());
-            }
-            else
-            {
-                return Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
-            }
         }
         public async Task<IActionResult> Details(int? id)
         {
-            var hall = await _context.Halls
+            if (id != null)
+            {
+                var hall = await _context.Halls
                 .Include(h => h.Technologies)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
-            {
-                return RedirectToAction("Index");
+                if (hall != null)
+                {
+                    return View(new HallViewModel(hall));
+                }
             }
-
-            return View(new HallViewModel(hall));
+            return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admins")]
         public IActionResult Create()
@@ -58,31 +53,35 @@ namespace Movies.Controllers
         public async Task<IActionResult> Create(HallViewModel model, int[] TechId)
         {
             var hall = new Hall(model);
-            hall.Technologies = TechId.Select(t => _context.Technologies.Find(t)).ToList();
-
+            hall.Technologies = TechId.Select(t => _context.Technologies.Find(t)).ToList()!;
             if (ModelState.IsValid)
             {
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Technologies = _context.Technologies.ToList();
-            return View(hall);
+            ViewBag.Technologies = _context.Technologies.ToListAsync();
+            return View(model);
         }
 
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            var hall = await _context.Halls.FindAsync(id);
-            if (hall == null)
+            if (id != null)
             {
-                return NotFound();
+                var hall = await _context.Halls.FindAsync(id);
+                if (hall != null)
+                {
+                    ViewBag.Technologies = _context.Technologies.ToList();
+                    var selectedTech = _context.Halls.Include(h => h.Technologies)
+                        .FirstOrDefault(h => h.Id == id);
+                    if (selectedTech != null) { 
+                        ViewBag.SelectedTech = selectedTech.Technologies?.Select(t => t.Id).ToList();
+                    }
+                    return View(new HallViewModel(hall));
+                }
             }
-            ViewBag.Technologies = _context.Technologies.ToList();
-            ViewBag.SelectedTech = _context.Halls.Include(h => h.Technologies)
-                .FirstOrDefault(h => h.Id == id)
-                .Technologies.Select(t => t.Id).ToList();
-            return View(new HallViewModel(hall));
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admins")]
@@ -97,31 +96,23 @@ namespace Movies.Controllers
                 {
                     return NotFound();
                 }
-
-                try
+                ICollection<Technology> technologies = new HashSet<Technology>();
+                foreach (int i in TechId)
                 {
-                    ICollection<Technology> technologies = new HashSet<Technology>();
-                    foreach (int i in TechId)
+                    var technology = _context.Technologies.Find(i);
+                    if (technology != null)
                     {
-                        technologies.Add(_context.Technologies.Find(i));
+                        technologies.Add(technology);
                     }
-                    var HallToUpd = _context.Halls.Include(h => h.Technologies)
-                        .FirstOrDefault(h => h.Id == id);
+                }
+                var HallToUpd = _context.Halls.Include(h => h.Technologies)
+                    .FirstOrDefault(h => h.Id == id);
+                if (HallToUpd != null)
+                {
                     HallToUpd.Name = hall.Name;
                     HallToUpd.Technologies = technologies;
                     _context.Update(HallToUpd);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HallExists(hall.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -132,15 +123,17 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            var hall = await _context.Halls
-                .Include(h => h.Technologies)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
+            if (id != null)
             {
-                return RedirectToAction("Index");
+                var hall = await _context.Halls
+                    .Include(h => h.Technologies)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (hall != null)
+                {
+                    return View(new HallViewModel(hall));
+                }
             }
-
-            return View(new HallViewModel(hall));
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admins")]
@@ -148,23 +141,13 @@ namespace Movies.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Halls == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
-            }
             var hall = await _context.Halls.FindAsync(id);
             if (hall != null)
             {
                 _context.Halls.Remove(hall);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool HallExists(int id)
-        {
-          return (_context.Halls?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

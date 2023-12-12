@@ -34,7 +34,6 @@ namespace Movies.Controllers
                 .Include("Tickets.User")
                 .Select(p => new PurchaseViewModel(p))
                 .ToList();
-
             return View(purchases);
         }
         [Authorize]
@@ -48,12 +47,9 @@ namespace Movies.Controllers
                 .Where(t => t.UserId == _manager.GetUserId(User))
                 .Select(p => new PurchaseViewModel(p))
                 .ToList();
-
             return View(purchases);
         }
 
-
-        // GET: Purchases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id != null)
@@ -88,10 +84,8 @@ namespace Movies.Controllers
                 .Where(t => t.UserId == _manager.GetUserId(User))
                 .Where(t => t.PurchaseId == null)
                 .ToList();
-
                 _context.Purchases.Add(purchase);
                 _context.SaveChanges();
-
                 foreach (var t in tickets)
                 {
                     t.PurchaseId = purchase.PurchaseId;
@@ -131,28 +125,17 @@ namespace Movies.Controllers
         public async Task<IActionResult> Edit(int id, PurchaseViewModel model)
         {
             var purchase = new Purchase(model);
-            if (id != purchase.PurchaseId)
+            if (ModelState.IsValid)
             {
+                if (id == purchase.PurchaseId)
+                {
+                    _context.Update(purchase);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
                 return NotFound();
             }
-
-            try
-            {
-                _context.Update(purchase);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PurchaseExists(purchase.PurchaseId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            return View(model);
         }
 
         [Authorize(Roles = "Admins")]
@@ -179,14 +162,9 @@ namespace Movies.Controllers
                     .Where(t => t.PurchaseId == purchase.PurchaseId).ToList();
                 _context.Tickets.RemoveRange(ticketsToRemove);
                 _context.Purchases.Remove(purchase);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PurchaseExists(int id)
-        {
-          return (_context.Purchases?.Any(e => e.PurchaseId == id)).GetValueOrDefault();
         }
     }
 }
