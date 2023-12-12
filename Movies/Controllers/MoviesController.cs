@@ -98,7 +98,7 @@ namespace Movies.Controllers
                 if (moviefind != null) movie.Poster = moviefind.Poster;
             }
             ModelState.Clear();
-            if (TryValidateModel(movie) && new DataController(_context).MoviesValidation(movie.Title))
+            if (TryValidateModel(movie) && new DataController(_context).MoviesValidation(movie.Title, movie.Id))
             {
                 if (id != movie.Id)
                 {

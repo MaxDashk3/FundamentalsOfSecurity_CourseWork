@@ -28,9 +28,15 @@ namespace Movies.Controllers
             }
             return valid;
         }
-        public bool HallsValidation(string Name)
+        public bool HallsValidation(string Name, int? id = null)
         {
             var valid = !_context.Halls.Any(h => h.Name == Name);
+            if (id != null)
+            {
+                var hall = _context.Halls.Find(id);
+                if (hall != null && hall.Name == Name)
+                    valid = true;
+            }
             return valid;
         }
     }
