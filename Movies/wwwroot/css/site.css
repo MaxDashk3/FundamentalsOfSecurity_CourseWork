@@ -65,14 +65,15 @@ label.form-control,
     color: black !important;
 }
 
-/*header {
+/*хедер 68-76 рядок*/
+header {
     background: rgba(255, 255, 255, 0.10);
     backdrop-filter: blur(20px);
 }
 
 .border-bottom[b-olg3qfw34b] {
     border-bottom: hidden !important;
-}*/
+}
 
 
 table {
