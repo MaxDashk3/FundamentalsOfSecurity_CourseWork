@@ -14,7 +14,9 @@ namespace Movies.ViewModels
         public string? Movie { get; set; }
         public int MovieId { get; set; }
         [Required(ErrorMessage = "This field is required")]
+        [Display(Prompt = "Select session time")]
         public DateTime TimeDate { get; set; }
+        [Display(Prompt = "Enter price in UAH")]
         [Required(ErrorMessage = "This field is required")]
         [Range(40, 500, ErrorMessage = "Price has to be between 40 and 500")]
         public int Price { get; set; }

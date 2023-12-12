@@ -9,6 +9,7 @@ namespace Movies.ViewModels
         public int Id { get; set; }
         [Remote(action: "GenresValidation", controller: "Data", ErrorMessage = "The genre already exists!")]
         [Required(ErrorMessage = "Enter")]
+        [Display(Name = "Genre name", Prompt = "Enter genre name here")]
         public string Name { get; set; }
         public List<MovieViewModel>? Movies { get; set; }
         public GenreViewModel() { }
