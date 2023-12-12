@@ -9,7 +9,7 @@
 }
 
 @media (max-width: 768px) {
-    input[type=radio].seat{
+    input[type=checkbox].seat{
         padding:11px!important;
     }
 }
@@ -101,20 +101,20 @@ button{
     color: gray;
 }
 
-input[type=radio].seat {
+input[type=checkbox].seat {
     padding: min(3.5vw,15px);
     -webkit-appearance: none;
     outline: unset;
     background-color: lightgray;
 }
 
-input[type=radio]:checked.seat {
+input[type=checkbox]:checked.seat {
     display: inline-block;
     background-color: lightgreen;
     accent-color: lightgreen;
 }
 
-input[type=radio]:disabled.seat {
+input[type=checkbox]:disabled.seat {
     display: inline-block;
     background-color: palevioletred;
     accent-color: palevioletred;
@@ -137,7 +137,6 @@ div.seats{
 td,
 th {
     color: white;
-    padding: 0px 3px;
     border-color: gray;
 }
 

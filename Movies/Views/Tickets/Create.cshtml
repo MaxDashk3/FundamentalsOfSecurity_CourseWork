@@ -37,7 +37,7 @@
 						@for (int n = 1; n <= ViewBag.Hall.SeatsPerRow; n++)
 						{
 							<td>
-								<input class="seat" type="radio" name="Seat" value="@i @n"
+								<input class="seat" type="checkbox" name="Seat" value="@i @n"
 								@(ViewBag.TakenSeats.Contains($"{i} {n}") ? "disabled" : "")>
 							</td>
 						}
