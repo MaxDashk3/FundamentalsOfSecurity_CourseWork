@@ -68,11 +68,6 @@ namespace Movies.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!HallExists(hall.Id))
-                {
-                    return NotFound();
-                }
-                else
                 {
                     throw;
                 }
