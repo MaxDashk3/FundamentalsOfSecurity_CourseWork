@@ -49,15 +49,37 @@ namespace Movies.Controllers
         }
         [HttpPost]
         [Authorize]
-        public IActionResult Create(TicketViewModel model)
+        public IActionResult Create(int SessionId, string UserId, string[] seat)
         {
-            model.SeatRow = Convert.ToInt16(model.Seat.Remove(model.Seat.IndexOf(' ')));
-            model.SeatNum = Convert.ToInt16(model.Seat.Remove(0 , model.Seat.IndexOf(' ')));
-            var ticket = new Ticket(model);
-            _context.Tickets.Add(ticket);
-            _context.SaveChanges();
-            return RedirectToAction("Index","Session");
+            try
+            {
+                foreach (var s in seat)
+                {
+                    var ticket = new Ticket()
+                    {
+                        SeatRow = Convert.ToInt16(s.Remove(s.IndexOf(' '))),
+                        SeatNum = Convert.ToInt16(s.Remove(0, s.IndexOf(' '))),
+                        SessionId = SessionId,
+                        UserId = UserId
+                    };
+                    _context.Tickets.Add(ticket);
+                }
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HallExists(hall.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Index", "Session");
         }
+
 
         public IActionResult Index()
         {
