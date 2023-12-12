@@ -1,4 +1,4 @@
-﻿@model Movies.Models.Hall
+﻿@model Movies.ViewModels.HallViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -13,7 +13,15 @@
         await Html.RenderPartialAsync("DetailsPartial", Model);
     }
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+    @if (User.IsInRole("Admins"))
+    {
+        <td>
+            <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a>
+        </td>
+    }
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+

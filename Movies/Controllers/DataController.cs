@@ -12,15 +12,26 @@ namespace Movies.Controllers
         {
             _context = context;
         }
-        public ActionResult GenresValidation(string Name)
+        public bool GenresValidation(string Name)
         {
             var valid = !_context.Genres.Any(g => g.Name == Name);
-            return Json(valid);
+            return valid;
         }
-        public ActionResult MoviesValidation(string Title)
+        public bool MoviesValidation(string Title, int? id = null)
         {
             bool valid = !_context.Movies.Any(m => m.Title == Title);
-            return Json(valid);
+            if (id != null)
+            {
+                var movie = _context.Movies.Find(id);
+                if (movie != null && movie.Title == Title)
+                    valid = true;
+            }
+            return valid;
+        }
+        public bool HallsValidation(string Name)
+        {
+            var valid = !_context.Halls.Any(h => h.Name == Name);
+            return valid;
         }
     }
 }

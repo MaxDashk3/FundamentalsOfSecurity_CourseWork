@@ -1,47 +1,66 @@
-﻿@model IEnumerable<Movies.Models.Hall>
+﻿@model IEnumerable<Movies.ViewModels.HallViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
+
+	bool Admin = User.IsInRole("Admins");
+
 }
 
 <h1>Halls</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	@if (Admin)
+	{
+		<a asp-action="Create">Create New</a><br/>
+		<a asp-action="Index" asp-controller="Technologies">Manage technologies</a>
+	}
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rows)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SeatsPerRow)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rows)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SeatsPerRow)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Rows)
+			</th>
+			<th>
+				Seats per row
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Technologies)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Rows)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.SeatsPerRow)
+				</td>
+				<td>
+					@item.TechnologiesString
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+					@if (Admin)
+					{
+						<span>|</span>
+						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+						<span>|</span>
+						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

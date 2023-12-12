@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Models;
+using Movies.ViewModels;
 
 namespace Movies.Controllers
 {
@@ -20,139 +23,132 @@ namespace Movies.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if (_context.Halls != null)
-            {
-                return View(await _context.Halls.ToListAsync());
-            }
-            else
-            {
-                return Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
-            }
+            return View(await _context.Halls.Include(h => h.Technologies)
+                    .Select(h => new HallViewModel(h))
+                    .ToListAsync());
         }
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Halls == null)
+            if (id != null)
             {
-                return NotFound();
-            }
-
-            var hall = await _context.Halls
+                var hall = await _context.Halls
+                .Include(h => h.Technologies)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
-            {
-                return NotFound();
+                if (hall != null)
+                {
+                    return View(new HallViewModel(hall));
+                }
             }
-
-            return View(hall);
+            return RedirectToAction("Index");
         }
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
+            ViewBag.Technologies = _context.Technologies.ToList();
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> Create(HallViewModel model, int[] TechId)
         {
+            var hall = new Hall(model);
+            hall.Technologies = TechId.Select(t => _context.Technologies.Find(t)).ToList()!;
             if (ModelState.IsValid)
             {
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            ViewBag.Technologies = _context.Technologies.ToListAsync();
+            return View(model);
         }
 
-        // GET: Halls/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Halls == null)
+            if (id != null)
             {
-                return NotFound();
+                var hall = await _context.Halls.FindAsync(id);
+                if (hall != null)
+                {
+                    ViewBag.Technologies = _context.Technologies.ToList();
+                    var selectedTech = _context.Halls.Include(h => h.Technologies)
+                        .FirstOrDefault(h => h.Id == id);
+                    if (selectedTech != null)
+                    {
+                        ViewBag.SelectedTech = selectedTech.Technologies?.Select(t => t.Id).ToList();
+                    }
+                    return View(new HallViewModel(hall));
+                }
             }
-
-            var hall = await _context.Halls.FindAsync(id);
-            if (hall == null)
-            {
-                return NotFound();
-            }
-            return View(hall);
+            return RedirectToAction(nameof(Index));
         }
 
-        // POST: Halls/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Number,Rows,SeatsPerRow")] Hall hall)
+        public async Task<IActionResult> Edit(int id, HallViewModel model, int[] TechId)
         {
+            var hall = new Hall(model);
             if (ModelState.IsValid)
             {
                 if (id != hall.Id)
                 {
                     return NotFound();
                 }
-
-                try
+                ICollection<Technology> technologies = new HashSet<Technology>();
+                foreach (int i in TechId)
                 {
-                    _context.Update(hall);
-                    await _context.SaveChangesAsync();
+                    var technology = _context.Technologies.Find(i);
+                    if (technology != null)
+                    {
+                        technologies.Add(technology);
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                var HallToUpd = _context.Halls.Include(h => h.Technologies)
+                    .FirstOrDefault(h => h.Id == id);
+                if (HallToUpd != null)
                 {
-                    if (!HallExists(hall.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    HallToUpd.Name = hall.Name;
+                    HallToUpd.Technologies = technologies;
+                    _context.Update(HallToUpd);
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(hall) ;
-        }
-
-        // GET: Halls/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Halls == null)
-            {
-                return NotFound();
-            }
-
-            var hall = await _context.Halls
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
-            {
-                return NotFound();
-            }
-
+            ViewBag.Technologies = _context.Technologies.ToList();
             return View(hall);
         }
 
-        // POST: Halls/Delete/5
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id != null)
+            {
+                var hall = await _context.Halls
+                    .Include(h => h.Technologies)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (hall != null)
+                {
+                    return View(new HallViewModel(hall));
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "Admins")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Halls == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Halls'  is null.");
-            }
             var hall = await _context.Halls.FindAsync(id);
             if (hall != null)
             {
                 _context.Halls.Remove(hall);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool HallExists(int id)
-        {
-          return (_context.Halls?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

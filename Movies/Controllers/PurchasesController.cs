@@ -29,56 +29,43 @@ namespace Movies.Controllers
         {
             var purchases = _context.Purchases
                 .Include(p => p.Tickets)
-                .Include("Tickets.Session")
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
                 .Include("Tickets.User")
                 .Select(p => new PurchaseViewModel(p))
                 .ToList();
-
             return View(purchases);
         }
-
+        [Authorize]
         public IActionResult MyPurchases()
         {
             var purchases = _context.Purchases
                 .Include(p => p.Tickets)
-                .Include("Tickets.Session")
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
                 .Include("Tickets.User")
                 .Where(t => t.UserId == _manager.GetUserId(User))
                 .Select(p => new PurchaseViewModel(p))
                 .ToList();
-
             return View(purchases);
         }
 
-
-        // GET: Purchases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Purchases == null)
+            if (id != null)
             {
-                return NotFound();
-            }
-
-            var purchase = await _context.Purchases
+                var purchase = await _context.Purchases
                 .Include(p => p.Tickets)
                 .Include("Tickets.Session.Movie")
                 .Include("Tickets.Session.Hall")
                 .Include("Tickets.User")
                 .FirstOrDefaultAsync(m => m.PurchaseId == id);
-            if (purchase == null)
-            {
-                return NotFound();
+                return View(new PurchaseViewModel(purchase!));
             }
-
-            return View(new PurchaseViewModel(purchase));
+            return RedirectToAction("Index");
         }
 
-        // GET: Purchases/Create
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             ViewBag.UserId = _manager.GetUserId(User);
@@ -86,7 +73,7 @@ namespace Movies.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create(PurchaseViewModel model)
         {
             var purchase = new Purchase(model);
@@ -97,19 +84,17 @@ namespace Movies.Controllers
                 .Where(t => t.UserId == _manager.GetUserId(User))
                 .Where(t => t.PurchaseId == null)
                 .ToList();
-
                 _context.Purchases.Add(purchase);
                 _context.SaveChanges();
-
                 foreach (var t in tickets)
                 {
                     t.PurchaseId = purchase.PurchaseId;
                     _context.Update(t);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("BuyResult", new {Person = User.Identity.Name});
+                return RedirectToAction("BuyResult", new {Person = User.Identity!.Name});
             }
-            return View();
+            return View(model);
         }
 
         public IActionResult BuyResult(string Person)
@@ -121,82 +106,55 @@ namespace Movies.Controllers
             }
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Purchases == null)
+            if (id != null)
             {
-                return NotFound();
+                var purchase = await _context.Purchases
+                .FindAsync(id);
+                ViewBag.UserId = _manager.GetUserId(User);
+                return View(new PurchaseViewModel(purchase!));
             }
-
-            var purchase = await _context.Purchases.FindAsync(id);
-            if (purchase == null)
-            {
-                return NotFound();
-            }
-            ViewBag.UserId = _manager.GetUserId(User);
-            return View(new PurchaseViewModel(purchase));
+            return RedirectToAction("Index");
         }
 
-        // POST: Purchases/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, PurchaseViewModel model)
         {
             var purchase = new Purchase(model);
-            if (id != purchase.PurchaseId)
+            if (ModelState.IsValid)
             {
+                if (id == purchase.PurchaseId)
+                {
+                    _context.Update(purchase);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
                 return NotFound();
             }
-
-            try
-            {
-                _context.Update(purchase);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PurchaseExists(purchase.PurchaseId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            return View(model);
         }
 
-        // GET: Purchases/Delete/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Purchases == null)
+            if (id != null)
             {
-                return NotFound();
+                var purchase = await _context.Purchases
+                .FindAsync(id);
+                return View(new PurchaseViewModel(purchase!));
             }
-
-            var purchase = await _context.Purchases
-                .FirstOrDefaultAsync(m => m.PurchaseId == id);
-            if (purchase == null)
-            {
-                return NotFound();
-            }
-
-            return View(new PurchaseViewModel(purchase));
+            return RedirectToAction("Index");
         }
 
-        // POST: Purchases/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Purchases == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Purchases'  is null.");
-            }
             var purchase = await _context.Purchases.FindAsync(id);
             if (purchase != null)
             {
@@ -204,15 +162,9 @@ namespace Movies.Controllers
                     .Where(t => t.PurchaseId == purchase.PurchaseId).ToList();
                 _context.Tickets.RemoveRange(ticketsToRemove);
                 _context.Purchases.Remove(purchase);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PurchaseExists(int id)
-        {
-          return (_context.Purchases?.Any(e => e.PurchaseId == id)).GetValueOrDefault();
         }
     }
 }

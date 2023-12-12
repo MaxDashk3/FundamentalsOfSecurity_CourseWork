@@ -9,7 +9,8 @@ namespace Movies.ViewModels
 
         public int Id { get; set; }
         public int HallId { get; set; }
-        public int? Hall { get; set; }
+        public string? Hall { get; set; }
+
         public string? Movie { get; set; }
         public int MovieId { get; set; }
         [Required(ErrorMessage = "This field is required")]
@@ -17,6 +18,9 @@ namespace Movies.ViewModels
         [Required(ErrorMessage = "This field is required")]
         [Range(40, 500, ErrorMessage = "Price has to be between 40 and 500")]
         public int Price { get; set; }
+
+        public List<string>? HallTechStrList { get; set; }
+        public string? HallTechString { get; set; }
 
         public List<Ticket>? Tickets { get; set; }
 
@@ -34,7 +38,10 @@ namespace Movies.ViewModels
             }
             if (session.Hall != null)
             {
-                Hall = session.Hall.Number;
+                Hall = session.Hall.Name;
+                var Hmodel = new HallViewModel(session.Hall);
+                HallTechStrList = Hmodel.TechnologiesStrList;
+                HallTechString = Hmodel.TechnologiesString;
             }
             if (session.Movie != null)
             {

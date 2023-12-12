@@ -20,7 +20,7 @@ namespace Movies.ViewModels
         public string Movie { get; set; }
         public int MovieId { get; set; }
         public DateTime SessionTime { get; set; }
-        public int? Hall { get; set; }
+        public string? Hall { get; set; }
         public int Price { get; set; }
 
         public TicketViewModel(Ticket ticket) 

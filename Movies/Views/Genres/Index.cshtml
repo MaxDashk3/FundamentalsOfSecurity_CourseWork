@@ -1,35 +1,34 @@
-﻿@model IEnumerable<Movies.Models.Genre>
+﻿@model IEnumerable<Movies.ViewModels.GenreViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-
-
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
 
-            <!-- Додайте клас moving-header для рухаючого заголовка -->
-            <h2 class="text-center moving-header">Оберіть жанр який вам до вподоби!</h2>
-
+            <!-- wrapper для заголовка -->
+            <div class="wrapper">
+                <h2 class="text-center moving-header">Pick a genre that you like!</h2>
+            </div>
 
             <div class="genres">
                 @foreach (var item in Model)
                 {
                     <div class="genre">
                         <h2>@item.Name</h2>
-                        <a asp-controller="Movies" asp-action="Index" asp-route-GenreId="@item.Id">Детальніше</a>
+                        <a asp-controller="Genres" asp-action="Details" asp-route-Id="@item.Id">Details</a>
+                        @if (User.IsInRole("Admins"))
+                        {
+                            <a asp-controller="Genres" asp-action="Edit" asp-route-Id="@item.Id">Edit</a>
+                            <a asp-controller="Genres" asp-action="Delete" asp-route-Id="@item.Id">Delete</a>
+                        }
                     </div>
                 }
             </div>
 
-            <!-- Рекламний блок знизу -->
-            <div class="bottom-advertisement">
-                <img src="~/Genres/images/реклама.jpg" alt="Реклама знизу" />
-                <p>Тут може бути ваша реклама але Єва лохесса .</p>
-            </div>
+          
 
         </div>
     </div>

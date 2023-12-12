@@ -1,4 +1,4 @@
-﻿@model Movies.Models.Hall
+﻿@model Movies.ViewModels.HallViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,9 +13,9 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Rows" class="control-label"></label>
@@ -23,9 +23,16 @@
                 <span asp-validation-for="Rows" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SeatsPerRow" class="control-label"></label>
+                <label asp-for="SeatsPerRow" class="control-label">Seats per row</label>
                 <input asp-for="SeatsPerRow" class="form-control" />
                 <span asp-validation-for="SeatsPerRow" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @for (int i = 0; i < ViewBag.Technologies.Count; i++)
+                {
+                    <input type="checkbox" id="TechId @i" name="TechId" value="@ViewBag.Technologies[i].Id" />
+                    <label for="TechId @i">@ViewBag.Technologies[i].Name</label><br />
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

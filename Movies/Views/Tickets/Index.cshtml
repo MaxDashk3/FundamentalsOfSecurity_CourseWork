@@ -1,88 +1,100 @@
 ﻿@model IEnumerable<Movies.ViewModels.TicketViewModel>
 
 @{
-    ViewData["Title"] = "Tickets";
+	ViewData["Title"] = "Tickets";
+
+	bool Admin = User.IsInRole("Admins");
+
 }
 
 <h1>Tickets</h1>
 
-
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                Movie
-            </th>
-            <th>
-                Date and time
-            </th>
-            <th>
-                Row
-            </th>
-            <th>
-                Seat
-            </th>
-            <th>
-                Hall
-            </th>
-            <th>
-                Price
-            </th>
-            <th>
-                Bought by
-            </th>
-            <th>
-                Time of purchase
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a href="/Movies/Details/@item.MovieId">@item.Movie</a> 
-            </td>
-            <td>
-                @item.SessionTime
-            </td>
-            <td>
-                @item.SeatRow
-            </td>
-            <td>
-                @item.SeatNum
-            </td>
-            <td>
-                @item.Hall
-            </td>
-            <td>
-                @item.Price
-            </td>
-
-            @if(item.BoughtBy!= null)
-            {
-                <td>
-                    @item.BoughtBy;
-                </td>
-            }
-            else
-            {
-                <td>-</td>
-            }
-            @if(item.PurchaseId!= null)
-            {
-                <td>
-                    @item.DateOfPurchase
-                </td>
-            }
-            else
-            {
-                <td>-</td>
-            }
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				Movie
+			</th>
+			<th>
+				Date and time
+			</th>
+			<th>
+				Row
+			</th>
+			<th>
+				Seat
+			</th>
+			<th>
+				Hall
+			</th>
+			<th>
+				Price
+			</th>
+			@if (Admin)
+			{
+				<th>
+					Bought by
+				</th>
+			}
+			<th>
+				Time of purchase
+			</th>
+			@if (Admin)
+			{
+				<th></th>
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					<a href="/Movies/Details/@item.MovieId">@item.Movie</a>
+				</td>
+				<td>
+					@item.SessionTime
+				</td>
+				<td>
+					@item.SeatRow
+				</td>
+				<td>
+					@item.SeatNum
+				</td>
+				<td>
+					@item.Hall
+				</td>
+				<td>
+					@item.Price UAH
+				</td>
+				@if (Admin)
+					if (item.BoughtBy != null)
+					{
+						<td>
+							@item.BoughtBy;
+						</td>
+					}
+					else
+					{
+						<td>-</td>
+					}
+				@if (item.PurchaseId != null)
+				{
+					<td>
+						@item.DateOfPurchase
+					</td>
+				}
+				else
+				{
+					<td>-</td>
+				}
+				@if (Admin)
+				{
+					<td>
+						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</td>
+				}
+			</tr>
+		}
+	</tbody>
 </table>

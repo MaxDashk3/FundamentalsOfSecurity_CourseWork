@@ -1,58 +1,50 @@
-﻿@model Movies.ViewModels.MovieViewModel
+﻿@model Movies.ViewModels.SessionViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Create</h1>
+<h1>Edit</h1>
 
-<h4>Movie</h4>
+<h4>Session</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Country" class="control-label"></label>
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GenreId" class="control-label"></label>
-                <select asp-for="GenreId" class ="form-control">
-                    @foreach (var genre in ViewBag.Genres)
+                <label asp-for="HallId" class="control-label">Hall</label>
+                <select asp-for="HallId" class="form-control">
+                    @foreach (Hall hall in ViewBag.Halls)
                     {
-                        <option value="@genre.Id">@genre.Name</option>
+                        <option value="@hall.Id">@hall.Name</option>
                     }
                 </select>
+                <span asp-validation-for="HallId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
+                <label asp-for="MovieId" class="control-label">Movie</label>
+                <select asp-for="MovieId" class="form-control">
+                    @foreach (Movie movie in ViewBag.Movies)
+                    {
+                        <option value="@movie.Id">@movie.Title</option>
+                    }
+                </select>
+                <span asp-validation-for="MovieId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="TimeDate" class="control-label">Time and date</label>
+                <input asp-for="TimeDate" class="form-control" />
+                <span asp-validation-for="TimeDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Poster" class="control-label"></label>
-                <input asp-for="Poster" class="form-control" />
-                <span asp-validation-for="Poster" class="text-danger"></span>
+                <label asp-for="Price" class="control-label">Price in UAH</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VideoPath" class="control-label"></label>
-                <input asp-for="VideoPath" class="form-control" />
-                <span asp-validation-for="VideoPath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -61,4 +53,5 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
 

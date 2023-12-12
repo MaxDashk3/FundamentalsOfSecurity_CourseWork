@@ -30,7 +30,8 @@
     <div>
     <h4>Availible sessions:</h4>
     @{
-        await Html.RenderPartialAsync("SessionsTable", Model);
+        await Html.RenderPartialAsync("SessionsTable", Model.Sessions);
     }
     </div>
 </div>
+
