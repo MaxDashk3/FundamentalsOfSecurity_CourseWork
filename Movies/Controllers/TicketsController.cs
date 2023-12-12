@@ -51,32 +51,18 @@ namespace Movies.Controllers
         [Authorize]
         public IActionResult Create(int SessionId, string UserId, string[] seat)
         {
-            try
+            foreach (var s in seat)
             {
-                foreach (var s in seat)
+                var ticket = new Ticket()
                 {
-                    var ticket = new Ticket()
-                    {
-                        SeatRow = Convert.ToInt16(s.Remove(s.IndexOf(' '))),
-                        SeatNum = Convert.ToInt16(s.Remove(0, s.IndexOf(' '))),
-                        SessionId = SessionId,
-                        UserId = UserId
-                    };
-                    _context.Tickets.Add(ticket);
-                }
-                _context.SaveChanges();
+                     SeatRow = Convert.ToInt16(s.Remove(s.IndexOf(' '))),
+                     SeatNum = Convert.ToInt16(s.Remove(0, s.IndexOf(' '))),
+                     SessionId = SessionId,
+                     UserId = UserId
+                };
+                _context.Tickets.Add(ticket);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HallExists(hall.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.SaveChanges();
             return RedirectToAction("Index", "Session");
         }
 
