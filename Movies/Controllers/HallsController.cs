@@ -54,13 +54,13 @@ namespace Movies.Controllers
         {
             var hall = new Hall(model);
             hall.Technologies = TechId.Select(t => _context.Technologies.Find(t)).ToList()!;
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && new DataController(_context).HallsValidation(hall.Name))
             {
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Technologies = _context.Technologies.ToListAsync();
+            ViewBag.Technologies = await _context.Technologies.ToListAsync();
             return View(model);
         }
 
@@ -90,7 +90,7 @@ namespace Movies.Controllers
         public async Task<IActionResult> Edit(int id, HallViewModel model, int[] TechId)
         {
             var hall = new Hall(model);
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && new DataController(_context).HallsValidation(hall.Name, hall.Id))
             {
                 if (id != hall.Id)
                 {
@@ -110,6 +110,8 @@ namespace Movies.Controllers
                 if (HallToUpd != null)
                 {
                     HallToUpd.Name = hall.Name;
+                    HallToUpd.Rows = hall.Rows;
+                    HallToUpd.SeatsPerRow = hall.SeatsPerRow;
                     HallToUpd.Technologies = technologies;
                     _context.Update(HallToUpd);
                     await _context.SaveChangesAsync();

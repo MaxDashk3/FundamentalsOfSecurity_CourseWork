@@ -36,7 +36,7 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create(GenreViewModel genreView)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && new DataController(_context).GenresValidation(genreView.Name))
             {
                 _context.Add(new Genre(genreView));
                 await _context.SaveChangesAsync();
@@ -74,7 +74,7 @@ namespace Movies.Controllers
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Edit(GenreViewModel genreView)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && new DataController(_context).GenresValidation(genreView.Name))
             {
                  _context.Update(new Genre(genreView));
                  await _context.SaveChangesAsync();
