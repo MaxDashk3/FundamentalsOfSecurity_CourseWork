@@ -19,7 +19,7 @@
                     <div class="card-body d-flex flex-column h-100">
                         <!-- Назва фільму та кнопка "Детальніше" для сеансів і фільмів -->
                         <h5 class="card-title">
-                            <a asp-controller="Session" asp-action="Index" asp-route-MovieId="@item.Id">@item.Title</a>
+                            <a asp-controller="Movies" asp-action="Details" asp-route-Id="@item.Id">@item.Title</a>
                         </h5>
 
                    
