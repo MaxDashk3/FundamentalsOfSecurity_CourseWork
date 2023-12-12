@@ -46,10 +46,18 @@ a {
     text-decoration-color: gray;
 }
 
-a:hover,
-{
+a:hover{
     color: gray;
 }
+
+.nav-link {
+    color: white !important;
+}
+    .nav-link:hover,
+    .nav-link.active {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(20px);
+    }
 
 form {
     background: rgba(255, 255, 255, 0.05);
