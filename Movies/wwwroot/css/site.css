@@ -81,7 +81,8 @@ h3,
 h4,
 h5, 
 dd,
-dt{
+dt,
+button{
     color: white
 }
 
@@ -90,7 +91,7 @@ dt{
 }
 
 input[type=radio].seat {
-    padding: 20px;
+    padding: min(3.5vw,15px);
     -webkit-appearance: none;
     outline: unset;
     background-color: lightgray;
@@ -148,6 +149,7 @@ th {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .main-list li {

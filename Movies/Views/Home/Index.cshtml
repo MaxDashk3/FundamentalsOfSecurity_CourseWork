@@ -1,9 +1,43 @@
-﻿@{
+﻿@using Movies.ViewModels;
+@model List<MovieViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .full-width-img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px; /* Додайте відступ між фотографіями за потребою */
+    }
+
+    .first-img {
+        margin-left: 0; /* Встановіть відступ ліворуч для першої фотографії */
+    }
+
+    .last-img {
+        margin-right: 0; /* Встановіть відступ праворуч для останньої фотографії */
+    }
+
+    .big-button {
+        font-size: 2em; /* Збільшити розмір кнопки */
+    }
+</style>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome!</h1>
-    <p>View availible sessions here!</p>
-    <a href="/Session/Index"><button>Sessions</button></a>
+    <a href="/Session/Index"><button class="big-button">Sessions</button></a>
+</div>
+
+<div class="container">
+    <div class="row">
+        @foreach (var movie in Model)
+        {
+            <div class="col-3">
+                <a asp-controller="Movies" asp-action="Details" asp-route-Id="@movie.Id">
+                    <img src="@Url.Action("ShowImage", "Movies", new { id = movie.Id })" class="full-width-img @(movie == Model.First() ? "first-img" : "") @(movie == Model.Last() ? "last-img" : "")" alt="Movie Photo">
+                </a>
+            </div>
+        }
+    </div>
 </div>
