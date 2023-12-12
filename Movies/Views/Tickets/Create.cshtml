@@ -12,13 +12,13 @@
 	<h4>Choose your seat:</h4>
 	<br />
 	<br />
-	<form class="col-lg-8 row" action="/Tickets/Create" method="post">
+	<form class="row col-xl-8" action="/Tickets/Create" method="post">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<input name="UserId" value="@ViewBag.UserId" hidden />
 
 		<input name="SessionId" value="@ViewBag.Session.Id" hidden />
 
-		<div class="col-xl-8">
+		<div class="col-md-10 seats">
 			<div class="screen col-12">
 				<h5>Screen</h5>
 			</div>
@@ -46,7 +46,7 @@
 			</table>
 			<br />
 		</div>
-		<div class="col-xl-3">
+		<div class="col-md-2">
 			<input type="submit" value="Confirm" class="btn btn-primary" />
 			<br />
 			<a href="/Session/Index">Back to Sessions</a>

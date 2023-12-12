@@ -8,6 +8,12 @@
     }
 }
 
+@media (max-width: 768px) {
+    input[type=radio].seat{
+        padding:11px!important;
+    }
+}
+
 button[disabled] {
     background: rgba(255, 255, 255, 0.05);
     color:gray
@@ -112,6 +118,10 @@ input[type=radio]:disabled.seat {
     display: inline-block;
     background-color: palevioletred;
     accent-color: palevioletred;
+}
+
+div.seats{
+    max-width:600px
 }
 
 .screen {
