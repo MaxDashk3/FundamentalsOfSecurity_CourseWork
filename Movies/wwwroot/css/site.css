@@ -46,7 +46,8 @@ a {
     text-decoration-color: gray;
 }
 
-a:hover {
+a:hover,
+{
     color: gray;
 }
 
@@ -59,6 +60,33 @@ form {
     outline: none;
     margin-bottom: 20px;
 }
+
+.form-label,
+label.form-control,
+::placeholder {
+    color: black !important;
+}
+
+.form-label[for="Input_RememberMe"] {
+    color: white !important;
+}
+[for="Input_Email"],
+[for="Input_Password"],
+[for="Input_ConfirmPassword"] {
+    color: black !important;
+}
+
+header {
+    z-index: 10 !important;
+    position: relative;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(20px);
+}
+
+.border-bottom[b-olg3qfw34b] {
+    border-bottom: hidden !important;
+}
+
 
 table {
     background: rgba(255, 255, 255, 0.05);
@@ -78,7 +106,17 @@ html {
 body {
     margin-bottom: 60px;
     background: url("/images/back.jpg");
-    background-size: cover;
+    background-size: 100%;
+}
+ 
+.screen{
+    background: transparent !important;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: none;
 }
 
 p,
@@ -197,7 +235,7 @@ th {
     color: #ffff;
     font-size: 16px;
     cursor: pointer;
-    backdrop-filter: blur(20px)
+    backdrop-filter: blur(20px);
 }
 
 .sub-list li {
