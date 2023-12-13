@@ -54,7 +54,7 @@ a:hover{
     color: white !important;
 }
 
-.container {
+.container-a {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -68,8 +68,8 @@ a:hover{
 }
 
 .full-width-img {
-    width: 240px;
-    height: 360px;
+    width: 200px;
+    height: 340px;
     object-fit: cover;
     display: inline-block;
     margin: 0 5px;

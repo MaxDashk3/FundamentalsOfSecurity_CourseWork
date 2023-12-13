@@ -37,6 +37,7 @@ namespace Movies.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create(SessionViewModel sessionViewModel)
         {
             if (ModelState.IsValid)
