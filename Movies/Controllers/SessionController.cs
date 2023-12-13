@@ -22,7 +22,7 @@ namespace Movies.Controllers
         {
             var movies = _db.Movies
                 .Include
-                (m => m.Sessions
+                (m => m.Sessions!
                 .OrderBy(s => s.TimeDate))
                 .ThenInclude(s => s.Hall)
                 .Select(m => new MovieViewModel(m))
