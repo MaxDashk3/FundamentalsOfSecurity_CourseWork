@@ -37,7 +37,6 @@ namespace Movies.Controllers
             return View();
         }
         [HttpPost]
-        [Authorize(Roles = "Admins")]
         public IActionResult Create(SessionViewModel sessionViewModel)
         {
             if (ModelState.IsValid)
@@ -48,7 +47,7 @@ namespace Movies.Controllers
             }
             ViewBag.Movies = _db.Movies.ToList();
             ViewBag.Halls = _db.Halls.ToList();
-            return View();
+            return View(sessionViewModel);
         }
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)

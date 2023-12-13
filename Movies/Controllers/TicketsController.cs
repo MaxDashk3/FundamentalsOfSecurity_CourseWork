@@ -69,7 +69,6 @@ namespace Movies.Controllers
         public IActionResult Index()
         {
             var tickets = _context.Tickets
-                .Include(t => t.Session)
                 .Include(t => t.Session.Movie)
                 .Include(t => t.Session.Hall)
                 .Include(t => t.Session.Movie.Genre)
