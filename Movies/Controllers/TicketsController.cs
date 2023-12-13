@@ -66,7 +66,6 @@ namespace Movies.Controllers
             return RedirectToAction("Index", "Session");
         }
 
-
         public IActionResult Index()
         {
             var tickets = _context.Tickets

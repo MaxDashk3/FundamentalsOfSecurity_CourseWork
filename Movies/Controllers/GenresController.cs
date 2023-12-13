@@ -36,11 +36,16 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create(GenreViewModel genreView)
         {
-            if (ModelState.IsValid && new DataController(_context).GenresValidation(genreView.Name))
+            bool remote = new DataController(_context).GenresValidation(genreView.Name);
+            if (ModelState.IsValid && remote)
             {
                 _context.Add(new Genre(genreView));
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            if(!remote)
+            {
+                ModelState.AddModelError("Name", "Current genre name already exists");
             }
             return View(genreView);
         }
@@ -74,11 +79,16 @@ namespace Movies.Controllers
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Edit(GenreViewModel genreView)
         {
-            if (ModelState.IsValid && new DataController(_context).GenresValidation(genreView.Name))
+            bool remote = new DataController(_context).GenresValidation(genreView.Name);
+            if (ModelState.IsValid && remote)
             {
                  _context.Update(new Genre(genreView));
                  await _context.SaveChangesAsync();
                  return RedirectToAction(nameof(Index));
+            }
+            if (!remote)
+            {
+                ModelState.AddModelError("Name", "Current genre name already exists");
             }
             return View(genreView);
         }

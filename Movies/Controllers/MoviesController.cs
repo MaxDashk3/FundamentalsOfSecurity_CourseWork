@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Models;
 using Movies.ViewModels;
+using Movies.Controllers;
 
 namespace Movies.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public MoviesController(ApplicationDbContext context)
         {
             _context = context;
@@ -51,17 +51,25 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create(MovieViewModel model, IFormFile Poster)
         {
-            model.Poster = FileToBytes(Poster);
-            ModelState.Clear();
-            if (TryValidateModel(model) && new DataController(_context).MoviesValidation(model.Title))
+            bool remote = new DataController(_context).MoviesValidation(model.Title);
+            if (Poster != null)
             {
-                var movie = new Movie(model);
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                model.Poster = FileToBytes(Poster);
+                ModelState.Clear();
+                if (ModelState.IsValid)
+                {
+                    var movie = new Movie(model);
+                    _context.Add(movie);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            if (!remote)
+            {
+                ModelState.AddModelError("Title", "Title of film is already exists!");
             }
             ViewBag.Genres = _context.Genres.ToList();
-            return View();
+            return View(model);
         }
 
         public byte[] FileToBytes(IFormFile file)
@@ -98,7 +106,8 @@ namespace Movies.Controllers
                 if (moviefind != null) movie.Poster = moviefind.Poster;
             }
             ModelState.Clear();
-            if (TryValidateModel(movie) && new DataController(_context).MoviesValidation(movie.Title, movie.Id))
+            bool remote = new DataController(_context).MoviesValidation(movie.Title, movie.Id);
+            if (ModelState.IsValid && remote)
             {
                 if (id != movie.Id)
                 {
@@ -109,6 +118,11 @@ namespace Movies.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            if (!remote)
+            {
+                ModelState.AddModelError("Title", "Title of film is already exists!");
+            }
+            ViewBag.Genres = _context.Genres.ToList();
             ViewBag.Genres = _context.Genres.ToList();
             return View(new MovieViewModel(movie));
         }

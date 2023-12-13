@@ -22,9 +22,7 @@ namespace Movies.Controllers
 
         public async Task<IActionResult> Index()
         {
-              return _context.Technologies != null ? 
-                          View(await _context.Technologies.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Technologies'  is null.");
+            return View(await _context.Technologies.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
