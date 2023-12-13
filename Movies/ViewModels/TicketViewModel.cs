@@ -15,7 +15,6 @@ namespace Movies.ViewModels
 
         public string BoughtBy { get; set; }
         public DateTime DateOfPurchase { get; set; }
-        public string Address { get; set; }
 
         public string Movie { get; set; }
         public int MovieId { get; set; }
