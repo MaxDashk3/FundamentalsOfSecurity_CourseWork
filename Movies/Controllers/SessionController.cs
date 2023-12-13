@@ -18,7 +18,7 @@ namespace Movies.Controllers
         {
             _db = db;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var movies = _db.Movies
                 .Include
@@ -26,8 +26,8 @@ namespace Movies.Controllers
                 .OrderBy(s => s.TimeDate))
                 .ThenInclude(s => s.Hall)
                 .Select(m => new MovieViewModel(m))
-                .ToList();
-            return View(movies);
+                .ToListAsync();
+            return View(await movies);
         }
         [Authorize(Roles = "Admins")]
         public IActionResult Create()
