@@ -144,7 +144,8 @@ namespace Movies.Controllers
             if (id != null)
             {
                 var purchase = await _context.Purchases
-                .FindAsync(id);
+                    .Include(p => p.User)
+                    .FirstOrDefaultAsync(p => p.PurchaseId == id);
                 return View(new PurchaseViewModel(purchase!));
             }
             return RedirectToAction("Index");
