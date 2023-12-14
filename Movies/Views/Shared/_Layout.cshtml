@@ -24,7 +24,7 @@
             </div>
         </nav>
     </header>
-    <div class="container" style="z-index:0!important; position:relative">
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -38,6 +38,7 @@
   
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
